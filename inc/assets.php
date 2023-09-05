@@ -4,7 +4,7 @@ use Idleberg\WordpressViteAssets\WordpressViteAssets;
 
 if(!WP_DEBUG && !is_admin()) {
   $viteAssets = new WordpressViteAssets(get_stylesheet_directory().'/dist/manifest.json', get_stylesheet_directory_uri().'/dist/');
-  $viteAssets->inject('app/themes/hospitality/js/main.js', [
+  $viteAssets->inject('app/themes/sogeres/js/main.js', [
     'integrity' => false
   ]);
 }
