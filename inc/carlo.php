@@ -272,7 +272,7 @@ function carlo_render_region($region) {
   foreach((array)$region_blocks as $i => $block) {
     $content_blocks = get_field($region, get_queried_object_id())[$i] ?? [];
     if(is_string($block)) {
-      carlo_render("blocks/{$block}", $content_blocks);
+      carlo_render("blocks/{$block}", $content_blocks?:[]);
     } elseif($content_blocks) {
       foreach($content_blocks as $block) {
         carlo_render("blocks/{$block['acf_fc_layout']}", $block);
