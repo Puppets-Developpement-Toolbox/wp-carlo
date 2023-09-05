@@ -1,0 +1,58 @@
+@charset 'utf-8';
+
+/*
+ * Abstractions like variables, mixins, etc.
+ */
+@import 'utils/easings';
+@import 'utils/triangles';
+@import 'utils/variables';
+
+/*
+ * Common
+ */
+@import 'reset/reset';
+@import 'common/fonts';
+@import 'common/common';
+@import 'common/form';
+@import 'common/popins';
+@import 'common/header';
+@import 'common/footer';
+@import 'common/breadcrumb';
+@import 'common/section';
+@import 'common/loader';
+
+/*
+ * Components like priority-nav, slick-carousels, etc.
+ */
+@import 'components/_tiny-slider'; 
+
+/*
+ * Pages
+ */
+@import 'pages/home';
+
+/*
+ * Blocs
+ */
+@import 'blocs/slider-hero';
+@import 'blocs/text-image';
+@import 'blocs/picto-text';
+@import 'blocs/push';
+@import 'blocs/columns';
+@import 'blocs/intro';
+@import 'blocs/title-desc';
+@import 'blocs/slider-pillar';
+//@import 'blocs/line-column';//remplacé par slider-pillar
+@import 'blocs/partners';
+@import 'blocs/actus-list';
+@import 'blocs/key-figures';
+@import 'blocs/workflow';
+@import 'blocs/text-bullet';
+@import 'blocs/image-full-width';
+@import 'blocs/actus-filters';
+@import 'blocs/actus-results';
+@import 'blocs/contact-form';
+@import 'blocs/contact-map';
+@import 'blocs/actu-title';
+@import 'blocs/actu-detail';
+@import 'blocs/actus-last';

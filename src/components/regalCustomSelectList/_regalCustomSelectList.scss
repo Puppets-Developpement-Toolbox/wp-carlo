@@ -1,0 +1,150 @@
+// select
+.js-Dropdown {
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	max-width: 30rem;
+	font-weight: 500;
+	font-size: 1.6rem;
+	font-family: $regularFont;
+
+/*
+	&:hover{
+		.js-Dropdown-title {
+			&:after{
+				transform: rotate(180deg);
+			}
+		}
+	}
+*/
+}
+
+.js-Dropdown-title {
+	background-color: transparent;
+	color: $black;
+	padding: 0 5rem 0 2rem;
+	height: 4.6rem;
+	display: block;
+	cursor: pointer;
+	width: 100%;
+	position: relative;
+	font-weight: 500;
+	font-size: 1.6rem;
+	font-family: $regularFont;
+	text-align: center;
+	border: 0;
+	//border-bottom: .1rem solid $black;
+	outline: none;
+  text-transform: uppercase;
+	border: 1px solid transparent;
+  
+  &:after {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+		margin-top: -.5rem;
+    content: '';
+   /* width: 1.4rem;
+    height: .8rem;
+    background: url(/app/themes/hospitality/img/arrow-down-blue.svg) no-repeat 50% 50%;*/
+    width: 1rem;
+    height: 1rem;
+    border-left: .2rem solid $blue;
+    border-top: .2rem solid $blue;
+    transition: transform $speed2 $defaultEase, margin $speed2 $defaultEase;
+		transform: rotate(225deg);
+  }
+  
+  &.is-open,
+  &.is-open-top {
+    border: 1px solid $black;
+    border-bottom: 0;
+    &:after{
+			transform: rotate(45deg);
+			margin-top: -.2rem;
+    }
+  }
+}
+
+.js-Dropdown-list {
+	max-height: 0;
+	
+	overflow: hidden;
+	background-color: $white;
+	position: absolute;
+	top: calc(100% - .2rem);
+	z-index: 1;
+	width: 100%;
+	max-height: 0;
+	transition: max-height .25s $defaultEase, overflow-y 0.1s 0.5s;
+	overflow: hidden;
+	position: absolute;
+	top: 100%;
+	z-index: 1;
+	width: 100%;
+  
+	&.is-open {
+		top: calc(100% - .2rem);
+		max-height: 14.3em;
+		overflow-y: auto;
+		transition: max-height .25s $defaultEase, overflow-y 0.1s 0.5s;
+    background-color: $white;
+    border: $borderWidth solid $inputHoverBorderColor;
+    z-index: 30;
+	}
+	
+	&.is-open-top {
+		max-height: 14.3em;
+		overflow-y: auto;
+		top: auto;
+		bottom: calc(100% - .2rem);
+		transition: max-height .25s $defaultEase, overflow-y 0.1s 0.5s;
+    background-color: $white;
+    border: $borderWidth solid $inputHoverBorderColor;
+    z-index: 30;
+	}
+  
+	&.closing{
+		max-height: 0 !important;
+	}
+	
+	li {
+		cursor: pointer;
+		padding: 1rem;
+		height: 4.6rem;
+		border-bottom: .1rem solid $black;
+		
+		&:last-child{
+			border: 0;
+		}
+	}
+	
+	li:hover {
+		background-color: $greyLight;
+	}
+	
+	li.is-selected {
+		background-color: $greyLight;
+		
+		&:before {
+			content: '\2022';
+			padding-right: 0.5em;
+		}
+		
+		&:hover {
+			background-color: $greyLight;
+		}
+	}
+}
+
+.js-Dropdown-optgroup {
+	border: 0;
+	color: $black;
+	cursor: default;
+	padding: .5rem;
+	text-align: center;
+	
+	&:empty{
+		padding: 0;
+	}
+}

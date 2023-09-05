@@ -1,0 +1,103 @@
+.workflow {
+  text-align: center;
+  
+  .intro {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: $greyText;
+    margin-bottom: 4rem;
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .flow-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: $mBottom;
+    
+    @include regal-media-desktop {
+      margin-bottom: calc(#{$mBottom} + 2rem);
+    }
+    
+    .flow {
+      width: 100%;
+      margin-bottom: 1.5rem;
+      //padding: 3rem 0 3.4rem 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      
+      //@include regal-media-desktop {
+      @media (min-width: 64em) {
+        width: calc(25% - 1.125rem);
+        margin-right: 1.5rem;
+        margin-bottom: 0;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      //@include regal-media-tablet {
+      @media (min-width: $mobile) and (max-width: 63.9375em) {
+        width: calc(50% - .75rem);
+        margin-right: 1.5rem;
+        &:nth-child(2n) {
+          margin-right: 0;
+        }
+      }
+      
+      p:last-child {
+        margin-bottom: 0;
+      }
+      
+      @media (min-width: 1024px) and (max-width: 1155px) {
+        p {
+          font-size: 1.4rem;
+        }
+      }
+      
+      .image {
+        width: 100%;
+        margin: 2rem 0;
+        
+        img {
+          max-width: 100%;
+        }
+      }
+      
+      h3,
+      .t3 {
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1.3rem;
+      }
+      
+      @media (min-width: 64em) {
+        padding: 9rem 0;
+        position: relative;
+        .desc {
+          position: absolute;
+          width: 100%;
+          bottom: 0;
+        }
+        .image {
+          margin: 0;
+        }
+        
+        &:nth-child(2),
+        &:nth-child(4) {
+          .desc {
+            bottom: auto;
+            top: 0;
+          }
+          .image {
+            margin-top: 3.2rem;
+          }
+        }
+        
+      }
+      
+    }
+  }
+}

@@ -1,0 +1,71 @@
+.push {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  --deco-color: #{$green};
+  
+  .text {
+    width: 100%;
+    position: relative;
+    margin-bottom: 3.6rem;
+    
+    @include regal-media-desktop {
+      margin-left: 8.3333%;
+      width: calc(5* 8.3333%);
+      margin-bottom: 0;
+    }
+    
+    &:before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      right: 50%;
+      width: 100vw;
+      background: var(--deco-color); //$green;
+      height: 4.65rem;
+      
+      @include regal-media-desktop {
+        height: 9.3rem;
+      }
+    }
+    
+    h2 {
+      margin-bottom: 3.2rem;
+      padding-top: 2.41rem;
+      
+      @include regal-media-desktop {
+        max-width: calc(4% / 5 * 100);
+        padding-top: 3.2rem;
+      }
+      
+    }
+  }
+  
+  &.blue {
+    --deco-color: #{$blue};
+  }
+  &.green {
+    --deco-color: #{$green};
+  }
+  &.blue-dark {
+    --deco-color: #{$blueDark};
+  }
+  &.red {
+    --deco-color: #{$red};
+  }
+  
+  .image {
+    width: 100%;
+    
+    @include regal-media-desktop {
+      width: calc(5* 8.3333%);
+      flex-shrink: 0;
+    }
+    
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}

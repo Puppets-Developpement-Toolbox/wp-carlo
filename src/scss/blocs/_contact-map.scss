@@ -1,0 +1,35 @@
+.contact-map {
+  text-align: center;
+  
+  .desc {
+    margin-bottom: 6rem;
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+    
+    .text {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: $greyText;
+    }
+  }
+  
+  .map {
+    width: calc(100% + #{$sectionPaddingMobile * 2 });;
+    margin-left: -$sectionPaddingMobile;
+    margin-left: -$sectionPaddingMobile;
+    
+    @include regal-media-desktop {
+      width: calc(9 * 8.3333%);
+      margin: auto;
+    }
+    
+    img {
+      width: 100%;
+    }
+  }
+  
+  .picto-ext {
+    display: none;
+  }
+}

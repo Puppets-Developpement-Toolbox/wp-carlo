@@ -1,0 +1,80 @@
+.text-image {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: wrap;
+  
+  .text {
+    width: 100%;
+    position: relative;
+    @include regal-media-desktop {
+      margin-left: 8.3333%;
+      width: calc(5* 8.3333%);
+    }
+    
+    @include regal-media-tablet {
+      margin-left: 8.3333%;
+      width: 50%;
+    }
+    
+    h2 {
+      margin-bottom: 3.2rem;
+      padding-top: 2rem;
+      
+      @include regal-media-desktop {
+        max-width: calc(4% / 5 * 100);
+        padding-top: 3.2rem;
+      }
+      
+    }
+  }
+  
+  .image {
+    width: 100%;
+    border-radius: 0 $bigRadius 0 0;
+    overflow: hidden;
+    @include regal-media-tablet {
+      margin-right: 8.3333%;
+      width: 50%;
+    }
+    @include regal-media-desktop {
+      margin-right: 8.3333%;
+      width: calc(4* 8.3333%);
+    }
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  &.image-left {
+    .image {
+      order: 1;
+      border-radius: $bigRadius 0 0 0;
+      @include regal-media-tablet {
+        margin-left: 0;
+        margin-right: 0%;
+      }
+      @include regal-media-desktop {
+        margin-left: 8.3333%;
+        margin-right: 0%;
+      }
+    }
+    
+    .text {
+      order: 2;
+      
+      @include regal-media-tablet {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 5%;
+      }
+      @include regal-media-desktop {
+        margin-left: 0;
+        margin-right: 8.3333%;
+      }
+    }
+  }
+}

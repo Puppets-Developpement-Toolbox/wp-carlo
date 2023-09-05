@@ -1,0 +1,185 @@
+#popin-mask{
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 2001;
+	width: 100%;
+	height: 100%;
+	background: $maskBg;
+	opacity: 0;
+	transition: opacity $speed1 $defaultEase;
+	
+	&.closed{
+		transform: translateY(-100%);
+	}
+	
+	&.open{
+		transform: none;
+		opacity: 1;
+	}
+}
+
+.popin{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	z-index: 2002;
+	width: 100%;
+	height: auto;
+	max-width: 130rem;
+	max-height: 100vh;
+	background: $white;
+	opacity: 0;
+	border-radius: $defaultRadius;
+	transition: transform $speed1 $defaultEase, opacity $speed1 $defaultEase;
+	transform: translate(-50%, 100vh);
+	
+	@include tablet-to-large{
+		width: 80%;
+	}
+	
+	&.closed{	
+		left: -100000px;
+		top: -100000px;
+	}
+	
+	&.open{
+		left: 50%;
+		top: 50%;
+		opacity: 1;
+		transform: translate(-50%, -50%);
+	}
+	
+	.popin-inner{
+		padding: 4.8rem 2.5rem 2.5rem 2.5rem;
+		
+		@media (min-width: $tablet){
+			padding: 4.8rem;
+		}
+	}
+	
+	.close-popin{
+		width: 3.2rem;
+		position: absolute;
+		z-index: 10;
+		top: 2rem;
+		right: 2rem;
+		color: $black;
+		
+		&:hover{
+			color: $green;
+		}
+	}
+	
+	.video-player{
+		position: relative;
+		width: 100%;
+		height: 0;
+		padding-bottom: 56.25%;
+	}
+	
+	.player{
+		position: absolute;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		background: #000;
+		overflow: hidden;
+		width: 100%;
+		height: 100%;
+		max-height: 80vh;
+		transition: opacity $speed1 $defaultEase, transform $speed3 $defaultEase;
+		
+		&.off{
+			opacity: 0;
+			transform: scaleX(0);
+		}
+		
+		iframe,
+		video{
+			width: 100%;
+			height: 100%;
+		}
+	}
+	
+	&.popin-small{
+		text-align: center;
+		max-width: 58.5rem;
+		
+		.title{
+			font-size: 2.1rem;
+			font-family: $specialFont;
+			color: $green;
+			margin-bottom: 3.2rem;
+		}
+		.input-text{
+			.error{
+				margin: 1.6rem 0 0 0;
+				font-size: 1.4rem;
+				color: $red;
+			}
+		}
+		.ajax-error{
+			color: $red;
+			font-size: 1.4rem;
+			margin: 3.2rem 0 0 0;
+		}
+		
+		.ajax-mess{
+			color: $green;
+			font-size: 1.4rem;
+			margin: 3.2rem 0 0 0;
+		}
+	}
+}
+
+.popin-alert{
+	width: 100%;
+	max-width: 74.5rem;
+	padding: 4rem;
+	font-family: $regularFont;
+	font-size: 1.6rem;
+	
+	.alert-logo{
+		width: 20rem;
+		margin-bottom: 3rem;
+		@media (min-width: $mobile){
+			width: 30rem;
+		}
+	}
+	
+	.actions{
+		margin-top: 2.5rem;
+		
+		a{
+			display: block;
+			color: #2B2B38;
+		}
+		
+		.btn{
+			margin-top: 1.5rem;
+			color: $white;
+		}
+		
+		@media (min-width: $mobile){
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			
+			.btn{
+				margin-top: 0;
+				margin-left: 5rem;
+			}
+		}
+	}
+}
+
+.popin-message{
+	max-width: 50rem;
+	text-align: center;
+	box-shadow: 0px 20px 40px rgba(0, 0, 0, .15);
+	
+	.message{
+		margin-top: 3rem;
+	}
+}

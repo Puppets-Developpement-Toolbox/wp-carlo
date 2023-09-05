@@ -1,0 +1,207 @@
+
+#Root 
+
+
+
+#COMPONENTS /////
+components_base:
+
+  title: &title
+    _type: text_short
+    _label: Titre
+
+  subtitle: &subtitle
+    _type: text_short
+    _label: SousTitre
+
+  cta: &cta
+    label: text_short
+    link: text_short
+    blank: boolean
+
+  slide: &slide
+    image: image
+    content: text
+    cta: *cta
+  
+  description: &description
+    _label: Description
+    _type: wysiwyg
+
+  column: &column
+    title: *title
+    subtitle: *subtitle
+    description: *description
+  
+  column_picto: &column_picto
+    << : *column
+    image: image
+
+  picto: &picto
+    title: *title
+    description: *description
+    image: image
+  
+  text_image: &text_image
+    title: *title
+    description: *description
+    image: image
+
+  card: &card
+    title: *title
+    subtitle: *subtitle
+    description: *description
+    cta: *cta
+    image: image
+
+
+  partner: &partner
+    brand_logo: 
+      _type: image
+      _label: Logo de la marque
+    image: image
+    title: *title
+    description: *description
+
+  deco_color: &deco_color
+    _type: select
+    _choices: 
+      red: Rouge
+      blue: Bleu
+      green: Vert
+    _label: Couleur
+
+#FIELDS COMPONENTS \\\\\
+blocs_base:
+  text_image:
+    <<: *text_image
+    _label: Texte + Image
+
+  push: 
+    <<: *text_image
+    cta: *cta
+    deco_color: *deco_color
+
+  slider:
+    slides:
+      _type: repeater
+      _repeat: *slide
+      _min: 1  #repeat the thing x times (it smells like a flower!)
+
+  columns:
+    title: *title
+    _label: Colonnes colorées
+    columns:
+      _type: repeater
+      _repeat: *column_picto
+      _min: 3
+      _max: 4
+      _add_button: Ajouter une colonne 
+    
+  picto_text_inline:
+    _label: Liste d'images + texte en colone
+    title: *title
+    subtitle: *subtitle
+    pictos:
+      _type: repeater
+      _repeat : *picto
+      _min: 2
+    cta: *cta
+  
+  news:
+    _label: Actualités
+    title: *title
+    deco_color: *deco_color
+    nb_articles: 
+      _label: Nombre d'articles à afficher
+      _type: number
+
+  tabs:
+    _label: Partenaires
+    title: *title
+    partners:
+      _type: repeater
+      _repeat : *partner
+      _min: 4
+    cta: *cta
+
+  intro: 
+    _label: Hero image
+    image: image
+    deco_color: *deco_color
+    
+  title_description:
+    _label: Titre
+    title: *title
+    description: *description
+    deco_color: *deco_color
+
+  slider_pillar:
+    _label: Slider de contenu
+    title: *title
+    subtitle: *subtitle
+    pillars:
+      _label: Lignes de contenu
+      _type: repeater
+      _repeat:
+        title: *title
+        pillar_texts:
+          _label: Slides de contenu
+          _type: repeater
+          _repeat:
+            title: *title
+            description: *description
+
+  key_figures:
+    _label: Chiffres clés
+    title: *title
+    subtitle: *subtitle
+    keys:
+      _label: Chiffres
+      _type: repeater
+      _times: 4 
+      _repeat:
+        title: *title
+        subtitle: *subtitle
+
+  workflow:
+    _label: Devenir partenaire
+    title: *title
+    subtitle: *subtitle
+    steps:
+      _label: Étapes
+      _type: repeater
+      _times: 4 
+      _repeat:
+        title: *title
+        subtitle: *subtitle
+    cta: *cta
+
+  text_bullet:
+    _label: Liste
+    title: *title
+    items:
+      _label: Éléments
+      _type: repeater
+      _repeat:
+        item:
+          _type: text_short
+          _label: Élément
+    
+  image_full_width:
+    _label: Image plein écran
+    image: image
+ 
+  form: 
+    _label: Formulaire
+    deco_color: *deco_color
+    title: *title
+    description: *description
+    form:
+      _type: form
+    
+  map:
+    _label: Plan
+    title: *title
+    subtitle: *subtitle
+    image: image

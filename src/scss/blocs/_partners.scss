@@ -1,0 +1,253 @@
+.partners {
+  
+  h2,
+  .t2 {
+    font-size: 4.2rem;
+    padding-left: 8.3333%;
+  }
+    
+  @include regal-media-mobile {
+    padding: 0;
+    
+    h2,
+    .t2 {
+      font-size: 2.8rem;
+      padding: 0 $sectionPaddingMobile;
+    }
+  }
+  
+  .partners-nav {
+    display: flex;
+    
+    .partner-nav {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      width: 25%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background $speed3 $defaultEase;
+      
+      &.active {
+        cursor: default;
+      }
+      
+      @media (min-width: $mobile) {
+        &.active  {
+          background-color: $black;
+          
+          img {
+            filter: brightness(0) invert(1);
+          }
+        }
+        
+        &:nth-child(4n - 3) {
+          &.active      {
+            background-color: #{$blue};
+          }
+        }
+        
+        &:nth-child(4n - 2) {
+           &.active      {
+            background-color: #{$green};
+          }
+        }
+        
+        &:nth-child(4n - 1) {
+          &.active      {
+            background-color: #{$blueDark};
+          }
+        }
+        
+        &:nth-child(4n) {
+          &.active      {
+            background-color: #{$red};
+          }
+        }
+      }
+      
+      @include regal-media-desktop {
+        &:hover{
+          background-color: $black;
+          
+          img {
+            filter: brightness(0) invert(1);
+          }
+        }
+        
+        
+        &:nth-child(4n - 3) {
+          &:hover {
+            background-color: #{$blue};
+          }
+        }
+        
+        &:nth-child(4n - 2) {
+          &:hover {
+            background-color: #{$green};
+          }
+        }
+        
+        &:nth-child(4n - 1) {
+          &:hover {
+            background-color: #{$blueDark};
+          }
+        }
+        
+        &:nth-child(4n) {
+          &:hover {
+            background-color: #{$red};
+          }
+        }
+      }
+    }
+  }
+  
+  .partners-desc {
+    display: flex;
+    overflow: hidden;
+    margin-bottom: $mBottom;
+    --bg-color-active: #{$blue};
+    
+    width: calc(50% + 50vw);
+    margin-left: 0;
+    margin-right: 0;
+    
+    @include regal-media-desktop {
+      position: relative;
+      margin-bottom: 5rem;
+      
+      &:before {
+        content: '';
+        position: absolute;
+        z-index: 20;
+        width: 50vw;
+        height: 100%;
+        background: $bodyColor;
+        right: 100%;
+        top: 0;
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        width: 50vw;
+        height: 100%;
+        background: var(--bg-color-active);
+        left: 100%;
+        top: 0;
+        transition: background $speed2 $defaultEase;
+      }
+    }
+    
+    .partners-scroll {
+      transition: transform $speed1 $defaultEase;
+      display: flex;
+    }
+    
+    .partner {
+      width: 100%;
+      flex-shrink: 0;
+      display: flex;
+      flex-wrap: wrap;
+      --bg-color: #{$black};
+      background-color: var(--bg-color);
+      
+      &:nth-child(4n - 3) {
+        --bg-color: #{$blue};
+      }
+      
+      &:nth-child(4n - 2) {
+        --bg-color: #{$green};
+      }
+      
+      &:nth-child(4n - 1) {
+        --bg-color: #{$blueDark};
+      }
+      
+      &:nth-child(4n) {
+        --bg-color: #{$red};
+      }
+      
+      .image {
+        width: 100%;
+        
+        @include regal-media-desktop {
+          //width: calc(7 * 8.3333%);
+          aspect-ratio: 19 / 10;
+          width: calc(105% - 50vw);
+        }
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      
+      .desc {
+        width: 100%;
+        background-color: var(--bg-color);
+        color: $white;
+        padding: $sectionPaddingMobile;
+        
+        @include regal-media-desktop {
+          //width: calc(5 * 8.3333%);
+          padding: 6rem;
+          width: calc(95% - 50vw);
+        }
+        
+        h3 {
+          color: $white;
+          padding-bottom: 1.6rem;
+          margin-bottom: 1.6rem;
+          position: relative;
+          
+          &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 2.4rem;
+            height: .3rem;
+            background: currentColor;
+          }
+        }
+      }
+    }
+  }
+  
+  .actions {
+    text-align: center;
+  }
+  
+  .tns-outer {
+  
+    .tns-controls {
+    
+      button {
+        &:before {
+          content: '';
+          width: 3rem;
+          height: 3rem;
+          background: $white;
+          border-radius: 50%;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+      
+      @media (min-width: $maxWidthSection + 7em){
+        button[data-controls=prev] {
+          transform: translateX(-100%);
+        }
+        
+        button[data-controls=next] {
+          transform: translateX(100%);
+        }
+      }
+    }
+  }
+}

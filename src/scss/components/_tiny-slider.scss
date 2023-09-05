@@ -1,0 +1,276 @@
+// Version: 2.9.3
+
+.tns-outer {
+  padding: 0 !important; // remove padding: clientWidth = width + padding (0) = width
+  [hidden] { display: none !important; }
+  [aria-controls], [data-action] { cursor: pointer; }
+}
+.tns-slider {
+  -webkit-transition: all 0s;
+  -moz-transition: all 0s;
+  transition: all 0s;
+  > .tns-item {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+}
+
+.tns-outer {
+  button[data-action=stop],
+  button[data-action=start] {
+    display: none;
+  }
+}
+
+.tns-horizontal {
+  &.tns-subpixel {
+    white-space: nowrap;
+    > .tns-item {
+      display: inline-block;
+      vertical-align: top;
+      white-space: normal;
+    }
+  }
+  &.tns-no-subpixel {
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+    > .tns-item {
+      float: left;
+    }
+  }
+  &.tns-carousel {
+    &.tns-no-subpixel {
+      > .tns-item {
+        margin-right: -100%;
+      }
+    }
+  }
+}
+.tns-no-calc {
+  position: relative;
+  left: 0;
+}
+.tns-gallery {
+  position: relative;
+  left: 0;
+  min-height: 1px; // make sure slider container is visible
+  // overflow: hidden;
+  > .tns-item {
+    position: absolute;
+    left: -100%;
+    -webkit-transition: transform 0s, opacity 0s;
+    -moz-transition: transform 0s, opacity 0s;
+    transition: transform 0s, opacity 0s;
+  }
+  > .tns-slide-active {
+    position: relative;
+    left: auto !important;
+  }
+  > .tns-moving {
+    -webkit-transition: all 0.25s;
+    -moz-transition: all 0.25s;
+    transition: all 0.25s;
+  }
+}
+.tns-autowidth { display: inline-block; }
+.tns-lazy-img {
+  -webkit-transition: opacity 0.6s;
+  -moz-transition: opacity 0.6s;
+  transition: opacity 0.6s;
+  opacity: 0.6;
+  &.tns-complete { opacity: 1; }
+}
+.tns-ah {
+  -webkit-transition: height 0s;
+  -moz-transition: height 0s;
+  transition: height 0s;
+}
+.tns-ovh { overflow: hidden; }
+.tns-visually-hidden { position: absolute; left: -10000em; }
+.tns-transparent { opacity: 0; visibility: hidden; }
+
+.tns-fadeIn {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  z-index: 0;
+}
+.tns-normal, .tns-fadeOut {
+  opacity: 0;
+  filter: alpha(opacity=0);
+  z-index: -1;
+}
+
+
+// *** Fix a viewport issue in initialization
+.tns-vpfix {
+  white-space: nowrap;
+  > div, > li {
+    display: inline-block;
+  }
+}
+
+// *** Detecting browser capability ***
+$width: 310px;
+$height: 10px;
+$count: 70;
+$perpage: 3;
+
+.tns-t {
+  &-subp2 {
+    margin: 0 auto;
+    width: $width;
+    position: relative;
+    height: $height;
+    overflow: hidden;
+  }
+  &-ct {
+    width: (100% * $count / $perpage);
+    width: -webkit-calc(100% * #{$count} / #{$perpage});
+    width: -moz-calc(100% * #{$count} / #{$perpage});
+    width: calc(100% * #{$count} / #{$perpage});
+    position: absolute;
+    right: 0;
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+    > div {
+      width: (100% / $count);
+      width: -webkit-calc(100% / #{$count});
+      width: -moz-calc(100% / #{$count});
+      width: calc(100% / #{$count});
+      height: $height;
+      float: left;
+    }
+  }
+}
+
+.tns-outer {
+  position: relative;
+}
+
+.tns-controls {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  pointer-events: none;
+  transform: translateY(-50%);
+  
+  &:focus {
+    border: 0;
+    outline: none;
+  }
+  
+  button{
+    transition: transform $speed2 $defaultEase, opacity $speed2 $defaultEase;
+    width: 8.2rem;
+    height: 8.6rem;
+    border: 0;
+    font-size: 0;
+    position: relative;
+    pointer-events: auto;
+    background: transparent;
+    
+    &:after{
+      content: url(img/slider-arrow-right.svg);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform $speed2 $defaultEase
+    }
+    
+    &:hover{
+      &:after{
+        transform: translate(-50%, -50%) translateX(.5rem);
+      }
+    }
+    
+    &[disabled],
+    &.inactive {
+      cursor: default;
+      
+      &:after {
+        opacity: .25;
+      }
+      
+      &:hover{
+        
+        &:after{
+          opacity: .25;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+  }
+  
+  button[data-controls=prev]{
+    &:after{
+      content: url(img/slider-arrow-left.svg);
+    }
+    
+    &:hover{
+      
+      &:after{
+        transform: translate(-50%, -50%) translateX(-.5rem) ;
+      }
+    }
+    
+    &[disabled],
+    &.inactive {
+      
+      &:after {
+        opacity: .25;
+      }
+      
+      &:hover{
+        
+        &:after{
+          opacity: .25;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+  }
+  button[data-controls=next]{
+
+  }
+}
+
+.tns-nav {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  
+  button {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+    background: transparent;
+    border: .1rem solid $grey;
+    pointer-events: auto;
+    
+    &.tns-nav-active {
+      background: $grey;
+    }
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

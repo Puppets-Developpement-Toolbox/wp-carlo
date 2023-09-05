@@ -1,0 +1,92 @@
+.contact-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  --deco-color: #{$black};
+  &.blue {
+    --deco-color: #{$blue};
+  }
+  &.green {
+    --deco-color: #{$green};
+  }
+  &.blue-dark {
+    --deco-color: #{$blueDark};
+  }
+  &.red {
+    --deco-color: #{$red};
+  }
+  
+  .desc {
+    position: relative;
+    padding-top: 2rem;
+      
+    @include regal-media-desktop {
+      padding-top: 3.2rem;
+      width: calc(4 * 8.3333%);
+    }
+    
+    &:before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      right: 8.3333%;
+      width: 100vw;
+      background: var(--deco-color);
+      height: 4.65rem;
+      
+      @include regal-media-desktop {
+        height: 9.3rem;
+      }
+      
+    }
+  }
+  .form {
+    padding-top: 2rem;
+    @media (min-width: $tablet-landscape) {
+      width: calc(7 * 8.3333%);
+      padding-top: 3.2rem;
+    }
+    
+    fieldset {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .form-type-textfield {
+      margin-bottom: 5.2rem;
+      @media (min-width: $mobile) {
+        width: 45%;
+      }
+      
+      input::placeholder {
+        font-size: 1.6rem;
+      }
+    }
+    
+    .form-type-textarea {
+      margin-bottom: 5.2rem;
+      
+      textarea::placeholder {
+        font-size: 1.6rem;
+      }
+    }
+    
+    .btn {
+      margin-bottom: 0;
+    }
+    
+    .infos {
+      font-size: 1.6rem;
+    }
+    
+    .form-success {
+    @media (max-width: $mobile - .0625em) {
+      margin-top: $mBottom;
+    }
+      color: $green;
+    }
+  }
+}

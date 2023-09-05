@@ -1,0 +1,210 @@
+.slider-pillar {
+  @media (min-width: $mobile) and (max-width: $desktop + .0625em) {
+    //padding-right: 0;
+  }
+  .desc {
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+  
+    h2,
+    .t2 {
+      text-align: center;
+    }
+    
+    h3,
+    .t3 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: $greyText;
+      text-align: center;
+      margin-bottom: $mBottom;
+    }
+  }
+  
+  .column-slider {
+    margin-bottom: 4.5rem;
+    
+    &:nth-child(4n - 3) {
+      .col:nth-child(1) {
+        border-radius: $bigRadius 0 0 0;
+        background-color: $blue;
+      }
+    }
+    
+    &:nth-child(4n - 2) {
+      .col:nth-child(1) {
+        background-color: $green;
+      }
+    }
+    
+    &:nth-child(4n - 1) {
+      .col:nth-child(1) {
+        background-color: $blueDark;
+      }
+    }
+    
+    &:nth-child(4n) {
+      .col:nth-child(1) {
+        background-color: $red;
+      }
+    }
+    
+    @include regal-media-desktop {
+      &:last-child {
+        background: $greyLighter;
+        
+        .col:nth-child(1) {
+          border-radius: 0 0 $bigRadius 0;
+        }
+      }
+    }
+    
+    
+    @include regal-media-mobile {
+      margin-bottom: $mBottom;
+      
+      .col:nth-child(1) {
+        border-radius: $bigRadius 0 0 0;
+      }
+    }
+    
+    display: flex;
+    flex-wrap: wrap;
+    
+    .col:nth-child(1) {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8rem 3.2rem 6.4rem 3.2rem;
+      
+      @include regal-media-desktop {
+        width: 23.8%;
+      }
+      
+      @include regal-media-tablet {
+        width: 33.3333%;
+        
+      }
+      
+      h4,
+      .t4 {
+        color: $white;
+        text-align: center;
+        position: relative;
+        padding-bottom: 2.4rem;
+        margin-bottom: 0;
+        line-height: 1.4;
+        font-size: 2.4rem;
+        text-transform: none;
+        
+        &:after {
+          content: '';
+          position: absolute;
+          width: 2.4rem;
+          height: .3rem;
+          background: currentColor;
+          left: 50%;
+          bottom: 0;
+          transform: translateX(-50%);
+        }
+      }
+    }
+    
+    .col:nth-child(2) {
+      width: 100%;
+      background: $greyLighter;
+      position: relative;
+      padding-bottom: $mBottom;
+      
+      .line-slider {
+        display: flex;
+        padding: 2.5rem 0;
+        
+        @include regal-media-desktop {
+          padding: 5rem 0;
+        }
+        
+        @include regal-media-tablet {
+          padding: 3rem 0;
+        }
+        
+        .slide {
+          padding: 0 2.5rem;
+          
+          @include regal-media-desktop {
+            padding: 5rem 8rem;
+            border-right: .2rem solid $grey;
+            
+            &:nth-child(2n) {
+            }
+          }
+          
+          @include regal-media-tablet {
+            padding: 2.5rem 8rem 2.5rem 4rem;
+            border: 0;
+            &:nth-child(2n) {
+              padding: 2.5rem 4rem 0 8rem;
+            }
+          }
+          
+          p:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+      
+      @include regal-media-desktop {
+        padding-bottom: 0;
+        width: 76.2%;
+      }
+      
+      @include regal-media-tablet {
+        padding-bottom: $mBottom;
+        width: 66.6667%;
+      }
+      
+      /*
+      .tns-outer {
+        .tns-controls {
+          button[data-controls=prev] {
+            background-image: linear-gradient(from right, transparent, $greyLighter 33%);
+            background-color: transparent;
+          }
+          button[data-controls=next] {
+            background-image: linear-gradient(to right, transparent, $greyLighter 33%);
+            background-color: transparent;
+          }
+        }
+      }
+      */
+    }
+    
+    @include regal-media-desktop {
+      .tns-controls {
+        height: 100%;
+        button {
+          height: 100%;
+          width: 8rem;
+          background: $greyLighter;
+        }
+      }
+
+      .tns-outer{
+        position: relative;
+        &:after {
+          content: ' ';
+          display: block;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: 2px;
+          background: $greyLighter;
+          z-index: 1000;
+          position: absolute;
+        }
+      }
+    }
+  }
+}

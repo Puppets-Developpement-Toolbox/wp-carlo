@@ -1,0 +1,87 @@
+.actu-detail {
+  margin-top: $mBottom;
+  
+  @include regal-media-desktop {
+    margin-top: 0;
+    
+    .detail {
+      width: 100%;
+      padding-left: calc(3 * 8.3333%);
+    }
+  }
+  
+  
+  .image {
+    margin-bottom: $mBottom;
+    
+    img {
+      width: 100%;
+    }
+    
+    .legend {
+      margin-top: 1rem;
+    }
+  }
+}
+
+
+.actu-detail-infos {
+  margin-bottom: 2rem;
+  
+  span {
+    display: inline-block;
+    margin-right: .6rem;
+    margin-bottom: 1rem;
+    padding-left: 1.8rem;
+    position: relative;
+    
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: .8rem;
+      height: .8rem;
+      border-radius: 50%;
+      background: $red;
+      transform: translateY(-50%);
+    }
+    
+    &:first-child {
+      padding-left: 0;
+      
+      &:before {
+        display: none;
+      }
+    }
+    
+    &.author {
+      font-weight: 500;
+    }
+  }
+}
+
+.actu-detail-socials {
+  a {
+    margin-right: 1.2rem;
+    color: $red;
+    text-decoration: none;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+    
+    .picto {
+      display: inline-block;
+      width: 4rem;
+      height: 4rem;
+    }
+    .picto-ext {
+      display: none;
+    }
+    
+    &:hover {
+      color: $blueDark;
+    }
+  }
+}

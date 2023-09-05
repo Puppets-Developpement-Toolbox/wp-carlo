@@ -1,0 +1,202 @@
+.actus-list {
+  @include regal-media-desktop {
+    h2,
+    .t2 {
+      padding-left: 8.3333%;
+      max-width: calc(4* 8.3333%);
+    }
+  }
+  
+  @include regal-media-tablet {
+    .list-actus {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+  }
+  
+  .actu {
+    display: flex;
+    flex-wrap: wrap;
+    background: $white;
+    border-radius: $bigRadius 0 0 0;
+    box-shadow: $boxShadow;
+    margin-bottom: $mBottom;
+    
+    @include regal-media-tablet {
+      width: 47.5%;
+      margin-bottom: 5rem;
+      display: inline-block;
+    }
+    @include regal-media-desktop {
+      width: calc(10 * 8.3333%);
+      margin-bottom: 8rem;
+    }
+    
+    .actu-cont {
+      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+      border-radius: $bigRadius 0 0 0;
+      @include regal-media-desktop {
+        width: 100%;
+      }
+    }
+    
+    .image {
+      width: 100%;
+      @include regal-media-desktop {
+        width: 40%;
+      }
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    .desc {
+      width: 100%;
+      padding: $sectionPaddingMobile 1rem $sectionPaddingMobile $sectionPaddingMobile;
+      @include regal-media-desktop {
+        width: 60%;
+        padding: 5rem;
+
+        .middle {
+          width: 100%;
+        }
+      }
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+            
+      .type {
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1.6rem;
+      }
+      
+      .t3 {
+        font-weight: 500;
+        font-size: 2.4rem;
+      }
+      
+      .actions {
+        text-align: right;
+        
+        .btn {
+          color: $red;
+          font-size: 1.8rem;
+          background: transparent;
+          padding-right: 1.2rem;
+          
+          &:before {
+            display: none;
+          }
+          
+          &:after {
+            content: url(img/arrow-right-red.svg);
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 1.2rem;
+            transition: transform $speed2 $defaultEase;
+          }
+          
+          &:hover {
+            &:after {
+              transform: translateX(50%);
+            }
+          }
+          
+          .picto-ext {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  
+  &.blue {
+    --deco-color: #{$blue};
+  }
+  &.green {
+    --deco-color: #{$green};
+  }
+  &.blue-dark {
+    --deco-color: #{$blueDark};
+  }
+  &.red {
+    --deco-color: #{$red};
+  }
+  
+  &:not(.projets-list) {
+    
+    @include regal-media-desktop {
+      .actu {
+        &:nth-child(2n) {
+          margin-left: calc(2 * 8.3333%);
+          border-radius: 0 $bigRadius 0 0;
+          .actu-cont {
+            border-radius: 0 $bigRadius 0 0;
+          }
+          .image {
+            order: 2;
+          }
+          .desc {
+            order: 1;
+          }
+        }
+
+        
+        
+        &:nth-child(2n + 1):not(:last-child) {
+          position: relative;
+          
+          &:before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            right: 50%;
+            bottom: 0;
+            width: 100vw;
+            background: var(--deco-color);
+            height: 6.3rem;
+            transform: translateY(82%);
+            
+            @include regal-media-desktop {
+              height: 12.6rem;
+            }
+            
+          }
+        }
+
+      }
+    }
+  }
+  
+  &.projets-list {
+    .actu {
+      
+      @include regal-media-desktop {
+        margin-left: 8.3333%;
+        &:nth-child(2n) {
+          border-radius: 0 $bigRadius 0 0;
+          .actu-cont {
+            border-radius: 0 $bigRadius 0 0;
+          }
+          .image {
+            order: 2;
+          }
+          .desc {
+            order: 1;
+          }
+        }
+      }
+    }
+  }
+  
+  .actions {
+    text-align: center;
+  }
+}

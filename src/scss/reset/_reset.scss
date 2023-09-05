@@ -1,0 +1,127 @@
+////////// mini-reset
+*, *:before, *:after {
+	-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+	margin: 0; padding: 0;
+}
+
+html{
+	font-size: 62.5%;
+  /* mobile viewport bug fix */
+  height: -moz-available;          /* WebKit-based browsers will ignore this. */
+  height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+  height: stretch;
+  
+  &:focus-within {
+    scroll-behavior: smooth;
+  }
+}
+
+body{
+	overflow-x: hidden;
+	-webkit-font-smoothing: antialiased;
+	width: 100%;
+	min-height: 100vh;
+	/* mobile viewport bug fix */
+	min-height: -moz-fill-available;
+	min-height: -webkit-fill-available;
+	min-height: stretch;
+	display: flex;
+	flex-direction: column;
+	background-color: $white; 
+  color: $colorText;
+  text-rendering: optimizeSpeed;
+  display: flex; 
+  flex-direction: column;
+  
+	.page-content{
+		flex-grow: 1;
+    //overflow: hidden;
+	}
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+p{
+	//line-height: calc(1ex / 0.32);
+	margin-bottom: $mBottom;
+  //max-width: 80rem;
+}
+
+img{
+	display: block;
+}
+
+a{
+	img{
+		border: 0;
+	}
+}
+
+
+hr{
+	width: 100%; //calc(100% - 5rem);
+	//@media (min-width: $maxWidthSection){
+	//	width: 100%;
+	//}
+	max-width: $maxWidthSection;
+	border: 0;
+	border-top: .1rem solid rgba($black, .2);
+	margin: 3.2rem auto;
+}
+
+dl{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  color: $blue;
+  font-size: 1.6rem;
+  
+  dt,
+  dd{
+    width: 50%;
+    padding-top: 1.6rem;
+    padding-bottom: 1.6rem;
+    border-bottom: .1rem solid $blueLight;
+    
+  }
+  
+  dt{
+    padding-right: 1.6rem;
+    &:last-of-type{
+      border: 0;
+    }
+  }
+  
+  dd{
+    padding-left: 1.6rem;
+    font-weight: 700;
+    &:last-of-type{
+      border: 0;
+    }
+  }
+}
+
+h1, h2, h3, h4, .t1, .t2, .t3, .t4{
+	margin-top: 0;
+	text-rendering: optimizeLegibility;
+	font-weight: 600;
+	font-family: $titleFont;
+	color: $black;
+	margin-bottom: 1.6rem;
+  line-height: 1.15;
+}
+//fin mini-reset

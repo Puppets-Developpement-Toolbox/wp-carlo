@@ -1,0 +1,65 @@
+.picto-text {
+  
+  h2,
+  .t2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .intro {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: $greyText;
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 4rem;
+  }
+
+
+  .picto-text-list {
+    margin-top: 3.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    
+    .image {
+      margin-bottom:  2rem;
+      
+      img {
+        display: inline-block;
+        width: auto;
+        max-width: 100%;
+      }
+    }
+    
+    .picto-text-item {
+      text-align: center;
+      padding: 0 3rem;
+      width: 100%;
+      
+      @include regal-media-desktop {
+        padding: 0 5rem;
+        width: 33.3333%;
+      }
+      
+      @include regal-media-tablet {
+        padding: 0 4rem;
+        width: 50%;
+      }
+      
+      h3,
+      .t3 {
+        font-size: 1.6rem;
+        text-transform: uppercase;
+      }
+    }
+  }
+  
+  .actions {
+    text-align: center;
+    margin-top: 2rem;
+  }
+}
