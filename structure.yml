@@ -47,5 +47,42 @@ components_base:
     title: *title
     description: *description
     image: image
+
+    slide: &slide
+      image: image
+      content: text
+      cta: *cta
+
+  column: &column
+    title: *title
+    subtitle: *subtitle
+    description: *description
+  
+  column_picto: &column_picto
+    << : *column
+    image: image
+
+  
+  text_image: &text_image
+    title: *title
+    description: *description
+    image: image
+
+  card: &card
+    title: *title
+    subtitle: *subtitle
+    description: *description
+    cta: *cta
+    image: image
+
+
+  partner: &partner
+    brand_logo: 
+      _type: image
+      _label: Logo de la marque
+    image: image
+    title: *title
+    description: *description
+
   
   
