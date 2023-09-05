@@ -1,0 +1,51 @@
+
+#Root 
+
+
+
+#COMPONENTS /////
+components_base:
+
+  title: &title
+    _type: text_short
+    _label: Titre
+
+  subtitle: &subtitle
+    _type: text_short
+    _label: SousTitre
+
+  description: &description
+    _label: Description
+    _type: wysiwyg
+  
+  image: &image
+    _label: Image
+    _type: image
+    
+  linkTo: &linkTo
+    _type: text_short
+    _label: Lien vers
+  
+  #Ui Atoms 
+  deco_color: &deco_color
+    _type: select
+    _choices: 
+      red: Rouge
+      blue: Bleu
+      green: Vert
+    _label: Couleur
+
+
+  #Molecules 
+  cta: &cta
+    label: text_short
+    link: text_short
+    blank: boolean
+
+  picto: &picto
+    _label: Pictograme
+    title: *title
+    description: *description
+    image: image
+  
+  
