@@ -32,11 +32,6 @@ body{
   text-rendering: optimizeSpeed;
   display: flex; 
   flex-direction: column;
-  
-	.page-content{
-		flex-grow: 1;
-    //overflow: hidden;
-	}
 }
 
 /* Remove all animations and transitions for people that prefer not to see them */
@@ -82,40 +77,7 @@ hr{
 	margin: 3.2rem auto;
 }
 
-dl{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: stretch;
-  color: $blue;
-  font-size: 1.6rem;
-  
-  dt,
-  dd{
-    width: 50%;
-    padding-top: 1.6rem;
-    padding-bottom: 1.6rem;
-    border-bottom: .1rem solid $blueLight;
-    
-  }
-  
-  dt{
-    padding-right: 1.6rem;
-    &:last-of-type{
-      border: 0;
-    }
-  }
-  
-  dd{
-    padding-left: 1.6rem;
-    font-weight: 700;
-    &:last-of-type{
-      border: 0;
-    }
-  }
-}
-
-h1, h2, h3, h4, .t1, .t2, .t3, .t4{
+h1, h2, h3, h4 {
 	margin-top: 0;
 	text-rendering: optimizeLegibility;
 	font-weight: 600;
