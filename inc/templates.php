@@ -52,6 +52,12 @@ function carlo_acf_template_blocs($template, $definition) {
       'operator' => '==',
       'value' => 'posts_page',
     ]]];
+  } elseif(str_starts_with($template, 'type_')) {
+    $location = [[[
+      'param' => 'post_type',
+      'operator' => '==',
+      'value' => str_replace('type_', '', $template),
+    ]]];
   } else {
     $location = [[[
       'param' => 'post_type',

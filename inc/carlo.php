@@ -52,10 +52,19 @@ function carlo_render($tpl, array $args = []) {
   list($type, $name) = explode('/', $tpl.'/');
 
   if(empty($name)) {
-    $name = $type;
-    $type = 'templates';
+    if(str_starts_with($type, 'type_')) {
+      $name = str_replace('type_', '', $type);
+      $type = 'types';
+    } else {
+      $name = $type;
+      $type = 'templates';
+    }
     if($name !== 'error') {
       $args = array_merge(carlo_structure($type, $name), $args);
+      if($type === 'types') {
+        // types only have one template
+        $args = $args['template'];
+      }
     }
   }
   

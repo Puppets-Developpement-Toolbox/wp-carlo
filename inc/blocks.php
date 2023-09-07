@@ -105,8 +105,16 @@ function carlo_acf_fields($key, $definition, $parent_key) {
 function carlo_acf_init() {
   add_filter('theme_page_templates', 'carlo_register_templates', PHP_INT_MAX, 3);
   $templates = carlo_structure('templates');
-  foreach($templates as $template => $definition) {
-    carlo_acf_template_blocs($template, $definition);
+  if(is_array($templates)) {
+    foreach($templates as $template => $definition) {
+      carlo_acf_template_blocs($template, $definition);
+    }
+  }
+  $types = carlo_structure('types');
+  if(is_array($types)) {
+    foreach($types as $type => $definition) {
+      carlo_acf_template_blocs("type_{$type}", $definition['template']);
+    }
   }
 }
 
