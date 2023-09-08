@@ -45,6 +45,7 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'label' => $label,
     'name' => $key,
     'type' => $acf_type,
+    'required' => !empty($definition['_required']) && $definition['_required'] ? 1 : 0
   ];
 
   if($type === 'image') {
