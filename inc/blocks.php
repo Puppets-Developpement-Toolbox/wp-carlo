@@ -10,7 +10,7 @@ function carlo_structure_fields($definition) {
 }
 
 function carlo_acf_fields($key, $definition, $parent_key) {
-
+  if(empty($definition)) throw new Exception("le champ {$key} de {$parent_key} n'a pas de définition");
   if(is_array($definition) && !isset($definition['_type'])) {
     $type = 'group';
   } else {

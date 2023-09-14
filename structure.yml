@@ -23,7 +23,7 @@ components_base:
     _type: image
     
   linkTo: &linkTo
-    _type: text_short
+    _type: url
     _label: Lien vers
   
   # #Ui Atoms 
@@ -39,7 +39,7 @@ components_base:
   #Molecules 
   cta: &cta
     label: text_short
-    link: text_short
+    link: url
     blank: boolean
 
   picto: &picto
