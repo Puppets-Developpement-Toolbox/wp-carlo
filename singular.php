@@ -1,4 +1,5 @@
 <?php 
+ob_start();
 $template = match (true) {
   is_home() => 'archive',
   is_404() => 'error',
@@ -18,3 +19,4 @@ carlo_render('global/header');
 <?php
 carlo_render('global/footer');
 carlo_render('global/html_end');
+ob_flush();
