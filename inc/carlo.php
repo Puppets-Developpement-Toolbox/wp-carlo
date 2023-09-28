@@ -177,11 +177,38 @@ function carlo_get_value($key, $values) {
   return $values;
 }
 
+
 /**
- * returns an html image, sized width length 
+ * returns html image
+ * 
+ * exemple :
+ * - carlo_img(1) => return img tag for img with id 1 in its original format
+ * - carlo_img(1, '70x70') => return same img in 70x70 format
+ * - carlo_img(1, ['70x70', '(min-width: 1024px)' => '1600x900']) => return same image with an other dimension for big screen
+ * - carlo_img(1, ['70x70', '(min-width: 1024px)' => '1600x900'], 2, [(min-width: 2024px)' => '1600x900']) => return same image and image with id 2 for really big screen
+ * - carlo_img(1, ['class' => 'mr-16']) => in any case, if the last argument is an array with class key this is added as img attributes
  */
-function carlo_img($id, $dimensions){
+function carlo_img($id){
   $source_sizes = [];
+  $args = func_get_args();
+
+  // remove first arg, it's the id
+  array_shift($args);
+
+  $imgAttrs = [];
+  $lastArg = end($args);
+  if(is_array($lastArg) && array_key_exists('class', $lastArg)) {
+    // last arg is img attrs
+    $imgAttrs = $lastArg;
+    array_pop($args);
+  }
+
+  $dimensions = array_shift($args);
+  // default size => full size
+  if(is_null($dimensions)) {
+    $dimensions = 'full';
+  }
+
   if(is_array($dimensions)) {
     $default = $dimensions[0];
     unset($dimensions[0]);
@@ -189,10 +216,12 @@ function carlo_img($id, $dimensions){
     $dimensions = $default;
   }
 
-  $img = wp_get_attachment_image($id, $dimensions, false, ['sizes' => false]);
+
+
+  $img = wp_get_attachment_image($id, $dimensions, false, $imgAttrs);
 
   if(!$img) return '';
-  if(empty($source_sizes) && count(func_get_args()) === 2) return $img;
+  if(empty($source_sizes) && empty($args)) return $img;
 
   $source_html = function($id, array $source_sizes) {
     return implode("\n", array_map(function($media, $size) use($id) {
@@ -202,8 +231,8 @@ function carlo_img($id, $dimensions){
 
   $sources = $source_html($id, $source_sizes);
 
-  for($i = 2; $i < count(func_get_args()); $i = $i + 2) {
-    list($id, $source_sizes) = array_slice(func_get_args(), $i , 2);
+  for($i = 0; $i < count($args); $i = $i + 2) {
+    list($id, $source_sizes) = array_slice($args, $i , 2);
     $sources .= "\n" . $source_html($id, (array)$source_sizes);
   }
 
