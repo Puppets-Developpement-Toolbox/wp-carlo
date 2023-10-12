@@ -225,7 +225,6 @@ function carlo_img($id){
   if(empty($source_sizes) && empty($args)) return $img;
 
   $source_html = function($id, array $source_sizes) {
-    // dump($id, $source_sizes);
     return implode("\n", array_map(function($media, $size) use($id) {
       return '<source media="'.$media.'" srcset="'.wp_get_attachment_image_src($id, $size)[0].'">';
     }, array_keys($source_sizes), $source_sizes));

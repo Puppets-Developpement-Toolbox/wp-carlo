@@ -30,7 +30,8 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'select' => 'select',
     'form' => 'select',
     'reference' => 'relationship',
-    'boolean' => 'true_false'
+    'boolean' => 'true_false',
+    'taxonomy' => 'taxonomy'
   };
 
   if(isset($definition['_label'])) {
@@ -93,6 +94,12 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     $acf['post_type'] = (array)$definition['_ref_type'];
     $acf['return_format'] = 'object';
     if(isset($definition['_ref_max'])) $acf['max'] = $definition['_ref_max'];
+  }
+
+  if($type === 'taxonomy') {
+    $acf['taxonomy'] = $definition['_taxo'];
+    $acf['return_format'] = 'object';
+    $acf['field_type'] = 'multi_select';
   }
 
   if($type === 'text') {
