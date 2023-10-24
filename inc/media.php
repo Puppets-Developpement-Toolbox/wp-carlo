@@ -12,3 +12,13 @@ function carlo_register_img_size($sizes) {
     add_image_size($size_with_crop, $w, $h, !!intval($crop));
   }
 }
+
+if(
+  !empty($_SERVER['REQUEST_URI']) && 
+  str_starts_with($_SERVER['REQUEST_URI'], '/app/uploads') && 
+  !empty($_ENV['SFP_URL'])
+) {
+  wp_redirect("{$_ENV['SFP_URL']}{$_SERVER['REQUEST_URI']}");
+  die();
+}
+
