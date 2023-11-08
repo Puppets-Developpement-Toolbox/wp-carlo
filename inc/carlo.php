@@ -35,9 +35,13 @@ function carlo_structure($type = null, $name = null) {
     $structure = Yaml::parse($structure_yaml);
     $result = $structure;
   }
+
   if(null !== $type) {
     $result = $result[$type];
     if(null !== $name) {
+      if(!isset($result[$name])) {
+        throw new InvalidArgumentException("L'entrée '{$name}' n'existe pas pour le type '{$type}' dans le fichier de structure");
+      }
       $result = $result[$name];
     }
   }
