@@ -1,5 +1,5 @@
 {
-	"name": "puppets/wp-carlo",
+	"name": "puppets-wp-themes/carlo",
 	"type": "wordpress-theme",
 	"minimum-stability": "dev",
 	"prefer-stable": true
