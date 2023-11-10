@@ -22,6 +22,11 @@ function carlo_acf_template_blocs($template, $definition) {
       if(is_string($block)) {
         $fields[] = carlo_acf_fields($i, carlo_structure('blocs', $block), "{$template}_{$region}");
       } else {
+        $max = null;
+        if(isset($block['_blocs']) && is_array($block['_blocs'])) {
+          $max = $block['_max'] ?? null;
+          $block = $block['_blocs'];
+        }
         $fields[] = [
           'key' => "{$template}_{$region}_{$i}",
           'name' => $i,
@@ -32,6 +37,7 @@ function carlo_acf_template_blocs($template, $definition) {
             return carlo_acf_fields($block, carlo_structure('blocs', $block), "{$template}_{$region}");
           }, $block),
           'button_label' => 'Ajouter un bloc',
+          'max' => $max
         ];
       }
     }

@@ -39,6 +39,13 @@ function carlo_structure($type = null, $name = null) {
   if(null !== $type) {
     $result = $result[$type];
     if(null !== $name) {
+      if(!is_scalar($name)) {
+        throw new InvalidArgumentException(
+          'Il semble y avoir une erreur dans le fichier de structure, "'.
+          json_encode($name).
+          '" ne peut pas être un index de tableau'
+        );
+      }
       if(!isset($result[$name])) {
         throw new InvalidArgumentException("L'entrée '{$name}' n'existe pas pour le type '{$type}' dans le fichier de structure");
       }
