@@ -93,7 +93,10 @@ function carlo_acf_fields($key, $definition, $parent_key) {
   if($type === 'reference') {
     $acf['post_type'] = (array)$definition['_ref_type'];
     $acf['return_format'] = 'object';
-    if(isset($definition['_ref_max'])) $acf['max'] = $definition['_ref_max'];
+    if(isset($definition['_ref_max'])) {
+      throw new Exception('Les référence doivent utiliser la clé _max et non _ref_max');
+    }
+    if(isset($definition['_max'])) $acf['max'] = $definition['_max'];
   }
 
   if($type === 'taxonomy') {
