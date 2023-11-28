@@ -31,7 +31,8 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'form' => 'select',
     'reference' => 'relationship',
     'boolean' => 'true_false',
-    'taxonomy' => 'taxonomy'
+    'taxonomy' => 'taxonomy',
+    'date' => 'date
   };
 
   if(isset($definition['_label'])) {
@@ -51,6 +52,10 @@ function carlo_acf_fields($key, $definition, $parent_key) {
 
   if($type === 'image') {
     $acf['return_format'] = 'id';
+  }
+
+  if(isset($definition['_help'])) {
+    $acf['instructions'] = $definition['_help'];
   }
 
   if($type === 'group') {
