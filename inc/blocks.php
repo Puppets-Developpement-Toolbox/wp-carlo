@@ -32,7 +32,8 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'reference' => 'relationship',
     'boolean' => 'true_false',
     'taxonomy' => 'taxonomy',
-    'date' => 'date'
+    'date' => 'date_picker',
+    'datetime' => 'date_time_picker'
   };
 
   if(isset($definition['_label'])) {
