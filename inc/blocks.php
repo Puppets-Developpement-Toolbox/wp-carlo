@@ -35,6 +35,8 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'taxonomy' => 'taxonomy',
     'date' => 'date_picker',
     'link' => 'link',
+    'embed' => 'oembed',
+    'file' => 'file', 
     'datetime' => 'date_time_picker'
   };
 
@@ -53,7 +55,12 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'required' => !empty($definition['_required']) && $definition['_required'] ? 1 : 0
   ];
 
-  if($type === 'image') {
+  if(isset($definition['_help'])) {    
+      $acf['instructions'] = $definition['_help'];
+  }
+
+
+  if(in_array($type, ['image', 'file'])) {
     $acf['return_format'] = 'id';
   }
 
