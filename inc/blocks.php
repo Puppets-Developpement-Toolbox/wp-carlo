@@ -21,7 +21,7 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'text_short' => 'text',
     'group' => 'group',
     'repeater' => 'repeater',
-    'text' => 'textarea'
+    'text' => 'textarea',
     'wysiwyg' => 'wysiwyg',
     'image' => 'image',
     'url' => 'url',
