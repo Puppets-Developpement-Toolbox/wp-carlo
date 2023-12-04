@@ -37,7 +37,7 @@ function carlo_structure($type = null, $name = null) {
   }
 
   if(null !== $type) {
-    $result = $result[$type];
+   $result = $result[$type] ?? [];
     if(null !== $name) {
       if(!is_scalar($name)) {
         throw new InvalidArgumentException(
