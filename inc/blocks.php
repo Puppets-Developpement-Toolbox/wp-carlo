@@ -21,6 +21,7 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'text_short' => 'text',
     'group' => 'group',
     'repeater' => 'repeater',
+    'text' => 'textarea'
     'wysiwyg' => 'wysiwyg',
     'image' => 'image',
     'url' => 'url',
@@ -33,6 +34,7 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'boolean' => 'true_false',
     'taxonomy' => 'taxonomy',
     'date' => 'date_picker',
+    'link' => 'link',
     'datetime' => 'date_time_picker'
   };
 
@@ -114,8 +116,11 @@ function carlo_acf_fields($key, $definition, $parent_key) {
   if($type === 'text') {
     $acf['new_lines'] = 'br';
   }
-  
 
+  if($type === 'link') {
+     $acf['return_format'] = $definition['_return_url'] ? 'url' : 'array';
+  }
+  
   return $acf;
 }
 
