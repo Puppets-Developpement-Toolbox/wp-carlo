@@ -93,6 +93,7 @@ function carlo_acf_template_blocs($template, $definition) {
       'revisions', 'slug', 'author', 'format', 
       'featured_image', 'categories', 'tags', 
       'send-trackbacks'
-    ]
+    ],
+    'show_in_rest' => true,
   ]);
 }
