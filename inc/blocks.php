@@ -63,6 +63,9 @@ function carlo_acf_fields($key, $definition, $parent_key) {
   if(in_array($type, ['image', 'file'])) {
     $acf['return_format'] = 'id';
   }
+  if($type === 'date')  {
+    $acf['return_format'] = 'Y-m-d';
+  }
 
   if(isset($definition['_help'])) {
     $acf['instructions'] = $definition['_help'];
