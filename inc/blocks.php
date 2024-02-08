@@ -28,7 +28,8 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     'color' => 'color_picker',
     'text' => 'textarea',
     'number' => 'number',
-    'select' => 'select',
+    'choices' => 'select',
+    'select' => 'select', // @deprecated
     'form' => 'select',
     'reference' => 'relationship',
     'boolean' => 'true_false',
@@ -98,8 +99,12 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     }
   }
 
-  if($type === 'select') {
+  if($type === 'select' || $type === 'choices') {
     $acf['choices'] = $definition['_choices'];
+
+    if(!empty($definition['_multi'])) {
+      $ecf['type'] = 'checkbox';
+    }
   }
 
   if($type === 'form') {
