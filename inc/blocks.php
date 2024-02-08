@@ -103,7 +103,7 @@ function carlo_acf_fields($key, $definition, $parent_key) {
     $acf['choices'] = $definition['_choices'];
 
     if(!empty($definition['_multi'])) {
-      $ecf['type'] = 'checkbox';
+      $acf['type'] = 'checkbox';
     }
   }
 
