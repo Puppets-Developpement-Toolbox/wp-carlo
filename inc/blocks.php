@@ -135,6 +135,10 @@ function carlo_acf_fields($key, $definition, $parent_key) {
   if($type === 'link') {
      $acf['return_format'] = $definition['_return_url'] ? 'url' : 'array';
   }
+
+  if($type === 'wysiwyg') {
+    $acf['media_upload'] = 0;
+  }
   
   return $acf;
 }
