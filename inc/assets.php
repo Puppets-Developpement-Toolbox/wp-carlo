@@ -3,8 +3,9 @@ use Idleberg\WordpressViteAssets\WordpressViteAssets;
 
 
 if(!WP_DEBUG && !is_admin()) {
+  $assetPath = ltrim(str_replace(WP_HOME, '', get_stylesheet_directory_uri()), '/');
   $viteAssets = new WordpressViteAssets(get_stylesheet_directory().'/dist/manifest.json', get_stylesheet_directory_uri().'/dist/');
-  $viteAssets->inject('app/themes/sogeres/js/main.js', [
+  $viteAssets->inject("{$assetPath}/js/main.js", [
     'integrity' => false
   ]);
 }
