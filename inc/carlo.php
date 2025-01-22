@@ -227,11 +227,16 @@ function carlo_img($id){
     $dimensions = $default;
   }
 
-  $img = wp_get_attachment_image($id, $dimensions, false, [
-    'size' => false,
-    ...$imgAttrs
-  ]);
+  $rmSrcsetAttrs = function ($attrs) {
+    unset($attrs["srcset"], $attrs["sizes"]);
+    return $attrs;
+  };
+  add_filter("wp_get_attachment_image_attributes", $rmSrcsetAttrs);
+  
+  $img = wp_get_attachment_image($id, $dimensions, false, $imgAttrs);
 
+  remove_filter("wp_get_attachment_image_attributes", $rmSrcsetAttrs);
+  
   if(!$img) return '';
   if(empty($source_sizes) && empty($args)) return $img;
 
