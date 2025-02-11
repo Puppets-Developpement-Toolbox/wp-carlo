@@ -1,7 +1,6 @@
 <?php
+use Symfony\Component\ErrorHandler\Debug;
 
-if(WP_DEBUG) {
-  $whoops = new \Whoops\Run;
-  $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-  $whoops->register();
+if (WP_DEBUG) {
+    Debug::enable();
 }
