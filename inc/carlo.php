@@ -2,7 +2,9 @@
 
 class CarloWpDriver extends carlo\BaseDriver implements carlo\DriverInterface
 {
-    public function loadData(array $structure) {}
+    public function loadData(array $structure) {
+        return [];
+    }
 
     public function img(
         string $key,
@@ -69,6 +71,7 @@ HTML;
     }
 }
 
+//////  ----
 add_action("acf/init", "carlo_acf_init");
 
 carlo_driver(new CarloWpDriver());
@@ -177,7 +180,8 @@ function _carlo_nav_extract_elements(DomNode $node)
 
 function carlo_render_region($template, $region)
 {
-    $templates = carlo_structure("template");
+    $templates = carlo_structure("templates");
+
     if (
         !isset($templates[$template]) ||
         !isset($templates[$template][$region])
@@ -188,11 +192,14 @@ function carlo_render_region($template, $region)
 
     foreach ((array) $region_sections as $i => $sections) {
         $content_blocks = get_field($region, get_queried_object_id())[$i] ?? [];
-        if (is_string($block)) {
-            carlo_render("sections/{$block}", $content_blocks ?: []);
+        if (isset($sections['_id'])) {
+            carlo_render($sections['_id'], $content_blocks ?: []);
         } elseif ($content_blocks) {
+            // flexible repeater
             foreach ($content_blocks as $block) {
-                carlo_render("sections/{$block["acf_fc_layout"]}", $block);
+                $block['_id'] = $block["acf_fc_layout"];
+                unset($block["acf_fc_layout"]);
+                carlo_render($block['_id'], $block);
             }
         }
     }
