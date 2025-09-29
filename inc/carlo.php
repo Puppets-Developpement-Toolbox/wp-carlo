@@ -2,8 +2,32 @@
 
 class CarloWpDriver extends carlo\BaseDriver implements carlo\DriverInterface
 {
-    public function loadData(array $structure) {
-        return [];
+    public function getFile(string $type, string $element, string $variant = 'base'){
+        $variant = $variant ?: "base";
+        $abspath = "templates/{$element}";
+        $ext = $type === "structure" ? "yml" : "php";
+
+        $paths = [
+            "{$abspath}/{$variant}.{$ext}",
+            "{$abspath}/base.{$ext}",
+            "{$abspath}.{$ext}",
+        ];
+        $path = locate_template($paths);
+
+        if ($path !== ''){
+            $return = $path;
+        } else {
+            try{
+                $return = parent::getFile($type, $element, $variant);
+            }catch (Exception $e) {
+                return $e->getMessage();
+            }
+
+        }
+
+        if(!empty($return))
+            return $return;
+
     }
 
     public function img(
@@ -95,6 +119,11 @@ function carlo_acf_init()
     $types = carlo_structure("types");
     if (is_array($types)) {
         foreach ($types as $type => $definition) {
+            if(isset($definition['wp_args'])){
+                $default_wp_args = ['public' => true];
+                $definition['wp_args'] = array_merge($definition['wp_args'], $default_wp_args);
+                register_post_type($type, $definition['wp_args']);
+            }
             carlo_acf_template_blocs("type_{$type}", $definition["template"]);
         }
     }
@@ -181,6 +210,14 @@ function _carlo_nav_extract_elements(DomNode $node)
 function carlo_render_region($template, $region)
 {
     $templates = carlo_structure("templates");
+    //Si on est dans un custom type
+    if(str_starts_with($template, 'type_')){
+        $template = $post_type_name = get_post_type();
+        $templates_type = carlo_structure("types")[$post_type_name]['template'];
+        $templates[$post_type_name] = [
+            $region => $templates_type[$region]
+        ];
+    }
 
     if (
         !isset($templates[$template]) ||

@@ -6,7 +6,7 @@ function carlo_acf_template_blocs($template, $definition)
     $i = 0;
     $regions = [];
     foreach ($definition as $region => $region_blocks) {
-        $label = carlo_structure("regions", $region);
+        $label = carlo_structure("regions");
         $fields = [];
         foreach ((array) $region_blocks as $i => $block) {
             if (isset($block["_id"])) {
@@ -25,7 +25,7 @@ function carlo_acf_template_blocs($template, $definition)
                     "key" => "{$template}_{$region}_{$i}",
                     "name" => $i,
                     "type" => "flexible_content",
-                    "label" => "Blocs de contenu",
+                    "label" => "Blocs de " . $label[$region],
                     "display" => "block",
                     "layouts" => array_map(function ($block) use (
                         $template,
@@ -45,14 +45,14 @@ function carlo_acf_template_blocs($template, $definition)
 
         $regions[] = [
             "key" => "{$template}_{$region}",
-            "label" => $label,
+            "label" => $label[$region],
             "name" => $region,
             "layout" => "block",
             "type" => "group",
             "sub_fields" => $fields,
         ];
     }
-
+//dump($template);
     if ($template === "archive") {
         $location = [
             [
@@ -95,6 +95,7 @@ function carlo_acf_template_blocs($template, $definition)
         ];
     }
 
+
     acf_add_local_field_group([
         "key" => $template,
         "title" => "Layout {$template}",
@@ -118,4 +119,6 @@ function carlo_acf_template_blocs($template, $definition)
         ],
         "show_in_rest" => true,
     ]);
+
+    //dump($template, $regions);
 }

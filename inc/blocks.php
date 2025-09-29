@@ -52,6 +52,7 @@ function carlo_acf_fields($key, $definition, $parent_key)
         "embed" => "oembed",
         "file" => "file",
         "datetime" => "date_time_picker",
+        "picto" => "image"
     };
 
     if (isset($definition["_label"])) {
@@ -100,14 +101,18 @@ function carlo_acf_fields($key, $definition, $parent_key)
 
     if ($type === "container") {
         $acf["display"] = "block";
-        // dump($definition);
+
         $acf["layouts"] = array_map(function ($block) use ($parent_key, $key) {
+            if(is_null($block)) {
+                //dump($parent_key, $key, $block);
+                return;
+            }
             return carlo_acf_fields(
                 $block["_id"],
                 $block,
                 "{$parent_key}_{$key}"
             );
-        }, $definition["_children"]);
+        }, $definition);
         $acf["button_label"] = "Ajouter une sous-section";
     }
 
@@ -139,7 +144,7 @@ function carlo_acf_fields($key, $definition, $parent_key)
 
     if ($type === "select" || $type === "choices") {
         $acf["choices"] = $definition["_choices"];
-
+        $acf["value"] = $definition['_value']?? false;
         if (!empty($definition["_multi"])) {
             $acf["type"] = "checkbox";
         }

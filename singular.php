@@ -9,30 +9,27 @@ $template = match (true) {
 
 do_action("carlo_prerender", $template);
 
-// carlo_render("global/html_start");
-// carlo_render("global/header");
-?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="<?php bloginfo("charset"); ?>" />
-		<?php wp_head(); ?>
-	</head>
-  <body <?php body_class(); ?>>
+carlo_render("global/html_start");
+#carlo_render("global/header");
 
-    <?php
-    carlo_render("global/svg");
-
+if(is_page()) {
     $regions = carlo_structure("templates")[$template];
+} elseif(!is_404()) {
+    $regions = carlo_structure("types")[get_post_type()]['template'];
+}
     ?>
 <main id="main" class="page-content">
-  <?php foreach ($regions as $region => $sections) {
-      if(!str_starts_with($region, '_')) {
-        carlo_render_region($template, $region);
-      }
-  } ?>
+<?php
+    if(!empty($regions)){
+        foreach ($regions as $region => $sections) {
+              if(!str_starts_with($region, '_')) {
+                carlo_render_region($template, $region);
+              }
+          }
+    }
+?>
+
 </main>
 <?php
-// carlo_render("global/footer");
-carlo_render("global/html_end");
+carlo_render('global/html_end');
 ob_flush();

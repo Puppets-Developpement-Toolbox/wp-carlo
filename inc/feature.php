@@ -68,3 +68,30 @@ add_filter('acf/settings/load_json', function( $paths ) {
 });
 
 add_theme_support( 'title-tag' );
+
+/**
+ * Add style select buttons to TinyMCE editor
+ */
+function add_style_select_buttons($buttons) {
+    array_unshift($buttons, 'styleselect');
+    return $buttons;
+}
+add_filter('mce_buttons_2', 'add_style_select_buttons');
+
+/**
+ * Add classes to TinyMCE editor
+ */
+function carlo_tiny_mce_add_clases($init_array) {
+    $style_formats = array(
+        array(
+            'title' => 'Large paragraphe',
+            'help' => 'Ajoute une classe "large" au paragraphe',
+            'selector' => 'p,h1,h2,h3,h4,h5,h6,div,ul,ol,li,a,span',
+            'classes' => 'large'
+        ),
+    );
+
+    $init_array['style_formats'] = json_encode($style_formats);
+    return $init_array;
+}
+add_filter('tiny_mce_before_init', 'carlo_tiny_mce_add_clases');
