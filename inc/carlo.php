@@ -149,6 +149,7 @@ function carlo_menu($menu)
     add_filter("wp_nav_menu", "_carlo_filter_nav", 10, 2);
     wp_nav_menu([
         "theme_location" => $menu,
+        "container" => "nav"
     ]);
     remove_filter("wp_nav_menu", "_carlo_filter_nav", 10);
     remove_filter("nav_menu_link_attributes", "_carlo_filter_nav_add_id", 10);
