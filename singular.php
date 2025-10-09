@@ -18,7 +18,7 @@ if(is_page()) {
     $regions = carlo_structure("types")[get_post_type()]['template'];
 }
     ?>
-<main id="main" class="page-content">
+<main id="main" class="page-content flex-1">
 <?php
     if(!empty($regions)){
         foreach ($regions as $region => $sections) {
