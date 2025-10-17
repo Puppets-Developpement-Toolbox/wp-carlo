@@ -5,7 +5,7 @@
 		<meta charset="<?php bloginfo("charset"); ?>" />
 		<?php wp_head(); ?>
 	</head>
-  <body <?php body_class('flex flex-col'); ?>>
+  <body <?php body_class(); ?>>
 
 		<?php carlo_render("global/svg"); ?>
 		<?php carlo_render("common/header"); ?>

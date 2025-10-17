@@ -18,7 +18,9 @@ if(is_page()) {
   $regions = carlo_structure("types")[get_post_type()]['template'];
 }
 ?>
-<main id="main" class="flex-1">
+<main id="main"
+      class="flex-1 flex flex-col gap-15
+            laptop:gap-37.5">
 <?php
   if(!empty($regions)){
     foreach ($regions as $region => $sections) {
