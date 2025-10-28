@@ -13,17 +13,6 @@ function carlo_register_img_size($sizes) {
   }
 }
 
-carlo_register_img_size([
-    '630x394',
-    '2040x1024',
-    '1287x1287',
-    '1072x1287',
-    '1600x900',
-    '70x70',
-    '1050x876',
-    '435x363'
-]);
-
 if(
   !empty($_SERVER['REQUEST_URI']) &&
   str_starts_with($_SERVER['REQUEST_URI'], '/app/uploads') &&
