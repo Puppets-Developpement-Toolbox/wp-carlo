@@ -122,3 +122,22 @@ function carlo_acf_template_blocs($template, $definition)
 
     //dump($template, $regions);
 }
+
+
+// Add template on page's list
+add_filter('manage_pages_columns', 'carlo_add_template_column');
+add_action('manage_pages_custom_column', 'carlo_template_column_value', 10, 2);
+
+function carlo_add_template_column($cols) {
+  $cols = [
+    ...array_slice($cols, 0, 2),
+    'template' => __('Template'),
+    ...array_slice($cols, 2),
+  ];
+  return $cols;
+}
+
+function carlo_template_column_value($column_name, $post_id) {
+  $templates = array_flip(get_page_templates());
+  echo $templates[get_page_template_slug() ?: 'default'];
+}

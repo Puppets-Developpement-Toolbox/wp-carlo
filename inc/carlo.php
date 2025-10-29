@@ -13,21 +13,7 @@ class CarloWpDriver extends carlo\BaseDriver implements carlo\DriverInterface
             "{$abspath}.{$ext}",
         ];
         $path = locate_template($paths);
-
-        if ($path !== ''){
-            $return = $path;
-        } else {
-            try{
-                $return = parent::getFile($type, $element, $variant);
-            }catch (Exception $e) {
-                return $e->getMessage();
-            }
-
-        }
-
-        if(!empty($return))
-            return $return;
-
+        return $path ?: parent::getFile($type, $element, $variant);
     }
 
     public function img(
