@@ -138,6 +138,7 @@ function carlo_add_template_column($cols) {
 }
 
 function carlo_template_column_value($column_name, $post_id) {
+  if($column_name !== 'template') return;
   $templates = array_flip(get_page_templates());
   echo $templates[get_page_template_slug() ?: 'default'];
 }
