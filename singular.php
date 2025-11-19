@@ -19,8 +19,7 @@ if(is_page()) {
 }
 ?>
 <main id="main"
-      class="flex-1 flex flex-col gap-15
-            laptop:gap-37.5">
+      class="flex-1 flex flex-col">
 <?php
   if(!empty($regions)){
     foreach ($regions as $region => $sections) {
