@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $template = match (true) {
   is_home() => "archive",
@@ -11,7 +12,6 @@ do_action("carlo_prerender", $template);
 
 carlo_render("global/html_start");
 #carlo_render("global/header");
-
 if(is_page()) {
   $regions = carlo_structure("templates")[$template];
 } elseif(!is_404()) {

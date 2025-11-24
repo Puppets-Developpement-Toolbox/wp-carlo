@@ -100,29 +100,20 @@ function carlo_acf_fields($key, $definition, $parent_key)
     }
 
     if ($type === "container") {
+
         $acf["display"] = "block";
+        $acf["layouts"] = array_map(function ($block) use ($parent_key, $key) {
+            if(is_null($block)) {
+                //dump($parent_key, $key, $block);
+                return;
+            }
 
-        if(empty($definition['_items'])) {
-            $acf["layouts"] = array_map(function ($block) use ($parent_key, $key) {
-                if(is_null($block)) {
-                    //dump($parent_key, $key, $block);
-                    return;
-                }
-
-                return carlo_acf_fields(
-                    $block['_id'] ?? $key,
-                    $block,
-                    "{$parent_key}_{$key}"
-                );
-            }, $definition);
-        } else {
-            $acf["layouts"] = array_map(
-                "carlo_acf_fields",
-                array_keys($definition['_items']),
-                $definition['_items'],
-                array_fill(0, count($definition['_items']), "{$parent_key}_{$key}")
+            return carlo_acf_fields(
+                $block['_id'],
+                $block,
+                "{$parent_key}_{$key}"
             );
-        }
+        }, $definition['_items'] ?? $definition);
 
         $acf["button_label"] =
             $definition["_add_button"] ?? "Ajouter une sous-section";
