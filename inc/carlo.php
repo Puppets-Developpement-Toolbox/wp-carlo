@@ -90,18 +90,16 @@ carlo_register($child_theme_structure);
 
 function carlo_acf_init()
 {
-    add_filter(
-        "theme_page_templates",
-        "carlo_register_templates",
-        PHP_INT_MAX,
-        3
-    );
     $templates = carlo_structure("templates");
     if (is_array($templates)) {
+        $to_register = [];
         foreach ($templates as $template => $definition) {
             carlo_acf_template_blocs($template, $definition);
+            $to_register[$template] = $definition['_label'];
         }
+        carlo_register_templates('page', $to_register);
     }
+
     $types = carlo_structure("types");
     if (is_array($types)) {
         foreach ($types as $type => $definition) {
@@ -110,20 +108,45 @@ function carlo_acf_init()
                 $definition['wp_args'] = array_merge($definition['wp_args'], $default_wp_args);
                 register_post_type($type, $definition['wp_args']);
             }
-            carlo_acf_template_blocs("type_{$type}", $definition["template"]);
+
+            $structure = null;
+            if(isset($definition["template"])) $structure = $definition["template"];
+            elseif(isset($definition["templates"]["default"])) {
+              $structure = $definition["templates"]["default"];
+              unset($definition["templates"]["default"]);
+            }
+            if(!$structure){
+              throw new \Exception("No template found for type $type");
+            }
+            carlo_acf_template_blocs("type_{$type}", $structure);
+
+            if(is_array($definition["templates"])){
+                $to_register = [];
+                foreach ($definition["templates"] as $template => $template_definition) {
+                    carlo_acf_template_blocs("type_{$type}__{$template}", $template_definition);
+                    $to_register[$template] = $template_definition["_label"];
+                }
+                carlo_register_templates($type, $to_register);
+            }
         }
     }
 }
 
-function carlo_register_templates($page_templates, $wp_theme, $post)
+function carlo_register_templates($post_type, $templates)
 {
-    $templates = carlo_structure("templates");
-    foreach ($templates as $template => $definition) {
-        if (!isset($page_templates[$template]) && $template !== "archive") {
-            $page_templates[$template] = $definition["_label"];
+  add_filter(
+    "theme_{$post_type}_templates",
+    function($registred_templates, $wp_theme, $post) use($templates) {
+      foreach ($templates as $template => $label) {
+        if (!isset($registred_templates[$template]) && $template !== "archive") {
+          $registred_templates[$template] = $label;
         }
-    }
-    return $page_templates;
+      }
+      return $registred_templates;
+    },
+    PHP_INT_MAX,
+    3
+  );
 }
 
 /**

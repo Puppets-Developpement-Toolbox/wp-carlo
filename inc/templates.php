@@ -52,7 +52,7 @@ function carlo_acf_template_blocs($template, $definition)
             "sub_fields" => $fields,
         ];
     }
-//dump($template);
+
     if ($template === "archive") {
         $location = [
             [
@@ -64,13 +64,19 @@ function carlo_acf_template_blocs($template, $definition)
             ],
         ];
     } elseif (str_starts_with($template, "type_")) {
+        [$post_type, $template] = explode("__", str_replace("type_", "", $template).'__');
         $location = [
             [
                 [
                     "param" => "post_type",
                     "operator" => "==",
-                    "value" => str_replace("type_", "", $template),
+                    "value" => $post_type,
                 ],
+                [
+                    "param" => "{$post_type}_template",
+                    "operator" => "==",
+                    "value" => $template ?: 'default',
+                ]
             ],
         ];
     } else {
@@ -120,7 +126,6 @@ function carlo_acf_template_blocs($template, $definition)
         "show_in_rest" => true,
     ]);
 
-    //dump($template, $regions);
 }
 
 

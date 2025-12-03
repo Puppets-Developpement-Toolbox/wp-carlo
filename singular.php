@@ -17,6 +17,7 @@ if(is_page()) {
 } elseif(!is_404()) {
   $regions = carlo_structure("types")[get_post_type()]['template'];
 }
+
 ?>
 <main id="main"
       class="flex-1 flex flex-col">
