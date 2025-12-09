@@ -120,7 +120,7 @@ function carlo_acf_init()
             }
             carlo_acf_template_blocs("type_{$type}", $structure);
 
-            if(is_array($definition["templates"])){
+            if(!empty($definition["templates"])){
                 $to_register = [];
                 foreach ($definition["templates"] as $template => $template_definition) {
                     carlo_acf_template_blocs("type_{$type}__{$template}", $template_definition);

@@ -34,7 +34,6 @@ function carlo_acf_fields($key, $definition, $parent_key)
         "group" => "group",
         "container" => "flexible_content",
         "repeater" => "repeater",
-        "text" => "textarea",
         "wysiwyg" => "wysiwyg",
         "image" => "image",
         "url" => "url",
