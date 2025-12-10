@@ -118,7 +118,7 @@ function carlo_acf_template_blocs($template, $definition)
             "slug",
             "author",
             "format",
-            "featured_image",
+            // "featured_image",
             "categories",
             "tags",
             "send-trackbacks",
