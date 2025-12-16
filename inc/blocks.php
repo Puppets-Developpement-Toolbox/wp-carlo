@@ -50,8 +50,7 @@ function carlo_acf_fields($key, $definition, $parent_key)
         "link" => "link",
         "embed" => "oembed",
         "file" => "file",
-        "datetime" => "date_time_picker",
-        "picto" => "image"
+        "datetime" => "date_time_picker"
     };
 
     if (isset($definition["_label"])) {
@@ -59,6 +58,10 @@ function carlo_acf_fields($key, $definition, $parent_key)
         unset($definition["_label"]);
     } else {
         $label = str_replace("_", " ", ucfirst($key));
+    }
+
+    if($type === 'image' && isset($definition['_multi'])) {
+      $acf_type = 'gallery';
     }
 
     $acf = [
@@ -79,6 +82,7 @@ function carlo_acf_fields($key, $definition, $parent_key)
     if (in_array($type, ["image", "file"])) {
         $acf["return_format"] = "id";
     }
+
     if ($type === "date") {
         $acf["return_format"] = "Y-m-d";
     }
@@ -164,6 +168,7 @@ function carlo_acf_fields($key, $definition, $parent_key)
     }
 
     if ($type === "reference") {
+
         $acf["post_type"] = (array) $definition["_ref_type"];
         $acf["return_format"] = "object";
         if (isset($definition["_ref_max"])) {
