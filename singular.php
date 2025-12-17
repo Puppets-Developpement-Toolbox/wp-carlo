@@ -11,26 +11,32 @@ $template = match (true) {
 do_action("carlo_prerender", $template);
 
 carlo_render("global/html_start");
-#carlo_render("global/header");
+
 if(is_page()) {
   $regions = carlo_structure("templates")[$template];
 } elseif(!is_404()) {
   $regions = carlo_structure("types")[get_post_type()]['template'];
 }
 
-?>
-<main id="main"
-      class="flex-1 flex flex-col">
-<?php
-  if(!empty($regions)){
-    foreach ($regions as $region => $sections) {
-      if(!str_starts_with($region, '_')) {
-        carlo_render_region($template, $region);
+$template_file = get_theme_file_path("/templates/{$template}.php");
+
+if(file_exists($template_file)) :
+  include $template_file;
+else : ?>
+  <main id="main"
+        class="flex-1 flex flex-col">
+    <?php
+      if(!empty($regions)){
+        foreach ($regions as $region => $sections) {
+          if(!str_starts_with($region, '_')) {
+            carlo_render_region($template, $region);
+          }
+        }
       }
-    }
-  }
-?>
-</main>
+    ?>
+  </main>
 <?php
+endif;
+
 carlo_render('global/html_end');
 ob_flush();
