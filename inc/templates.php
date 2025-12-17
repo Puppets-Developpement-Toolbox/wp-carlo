@@ -1,6 +1,6 @@
 <?php
 
-function carlo_acf_template_blocs($template, $definition)
+function carlo_acf_template_blocs($template, $definition, $has_template_condition)
 {
     $definition = carlo_structure_fields($definition);
     $i = 0;
@@ -53,6 +53,7 @@ function carlo_acf_template_blocs($template, $definition)
         ];
     }
 
+    $acf_key = $template;
     if ($template === "archive") {
         $location = [
             [
@@ -71,14 +72,17 @@ function carlo_acf_template_blocs($template, $definition)
                     "param" => "post_type",
                     "operator" => "==",
                     "value" => $post_type,
-                ],
-                [
-                    "param" => "{$post_type}_template",
-                    "operator" => "==",
-                    "value" => $template ?: 'default',
                 ]
-            ],
+            ]
         ];
+        if($has_template_condition) {
+            $location[0][] = [
+                "param" => "post_template",
+                "operator" => "==",
+                "value" => $template ?: 'default',
+            ];
+        }
+
     } else {
         $location = [
             [
@@ -103,7 +107,7 @@ function carlo_acf_template_blocs($template, $definition)
 
 
     acf_add_local_field_group([
-        "key" => $template,
+        "key" => $acf_key,
         "title" => "Layout {$template}",
         "layout" => "seamless",
         "active" => true,
@@ -125,7 +129,6 @@ function carlo_acf_template_blocs($template, $definition)
         ],
         "show_in_rest" => true,
     ]);
-
 }
 
 

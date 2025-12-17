@@ -94,7 +94,7 @@ function carlo_acf_init()
     if (is_array($templates)) {
         $to_register = [];
         foreach ($templates as $template => $definition) {
-            carlo_acf_template_blocs($template, $definition);
+            carlo_acf_template_blocs($template, $definition, true);
             $to_register[$template] = $definition['_label'];
         }
         carlo_register_templates('page', $to_register);
@@ -109,6 +109,15 @@ function carlo_acf_init()
                 register_post_type($type, $definition['wp_args']);
             }
 
+            $to_register = [];
+            if(!empty($definition["templates"])){
+                foreach ($definition["templates"] as $template => $template_definition) {
+                    carlo_acf_template_blocs("type_{$type}__{$template}", $template_definition, true);
+                    $to_register[$template] = $template_definition["_label"];
+                }
+                carlo_register_templates($type, $to_register);
+            }
+
             $structure = null;
             if(isset($definition["template"])) $structure = $definition["template"];
             elseif(isset($definition["templates"]["default"])) {
@@ -118,16 +127,8 @@ function carlo_acf_init()
             if(!$structure){
               throw new \Exception("No template found for type $type");
             }
-            carlo_acf_template_blocs("type_{$type}", $structure);
+            carlo_acf_template_blocs("type_{$type}", $structure, !empty($to_register));
 
-            if(!empty($definition["templates"])){
-                $to_register = [];
-                foreach ($definition["templates"] as $template => $template_definition) {
-                    carlo_acf_template_blocs("type_{$type}__{$template}", $template_definition);
-                    $to_register[$template] = $template_definition["_label"];
-                }
-                carlo_register_templates($type, $to_register);
-            }
         }
     }
 }
