@@ -124,10 +124,9 @@ function carlo_acf_init()
               $structure = $definition["templates"]["default"];
               unset($definition["templates"]["default"]);
             }
-            if(!$structure){
-              throw new \Exception("No template found for type $type");
+            if($structure){
+              carlo_acf_template_blocs("type_{$type}", $structure, !empty($to_register));
             }
-            carlo_acf_template_blocs("type_{$type}", $structure, !empty($to_register));
 
         }
     }
