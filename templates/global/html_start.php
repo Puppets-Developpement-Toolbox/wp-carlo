@@ -7,5 +7,8 @@
 	</head>
   <body <?php body_class(); ?>>
 
-		<?php carlo_render("global/svg"); ?>
+
+	<!-- Ajouter un svg -->
+
+		<?php //carlo_render("global/svg"); ?>
 		<?php carlo_render("common/header"); ?>

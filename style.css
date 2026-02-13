@@ -9,3 +9,5 @@ Requires PHP: 8.0
 Version: 3.0
 Text Domain: carlo
 */
+@import './../../../../vendor/puppets/library/src/css/global.css';
+@source './../carlo/templates*';

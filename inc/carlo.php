@@ -2,30 +2,39 @@
 
 class CarloWpDriver extends carlo\BaseDriver implements carlo\DriverInterface
 {
-    public function getFile(string $type, string $element, string $variant = 'base'){
+    public function getFile(string $type, string $element, string $variant = 'base', string $namespace = 'default')
+    {
         $variant = $variant ?: "base";
-        $abspath = "templates/{$element}";
+
+        // Vérifier que le namespace est enregistré
+        if (!isset($this->namespaces[$namespace])) {
+            throw new Exception("Le namespace '{$namespace}' n'est pas enregistré.");
+        }
+
         $ext = $type === "structure" ? "yml" : "php";
 
-        $paths = [
-            "{$abspath}/{$variant}.{$ext}",
-            "{$abspath}/base.{$ext}",
-            "{$abspath}.{$ext}",
-        ];
-        $path = locate_template($paths);
-        return $path ?: parent::getFile($type, $element, $variant);
+        //  Utiliser la fonction get paths
+        $paths = $this->getPathsToTest($ext, $element, $variant, $namespace);
+
+        // Utiliser locate_template de WordPress (cherche child-theme puis parent-theme)
+        $wp_path = locate_template(array_map(fn($p) => "templates/{$p}", $paths));
+        if ($wp_path) {
+            return $wp_path;
+        }
+
+        // Fallback sur le package (namespace enregistré via BaseDriver)
+        return parent::getFile($type, $element, $variant, $namespace);
     }
+
 
     public function img(
         string $key,
         string $default_size,
         array $source_sizes,
-        $mobile_key, // string|null
+        $mobile_key,
         array $mobile_source_sizes,
         array $imgAttrs
     ) {
-        // si la clé est numérique on la traite comme un id d'attachment
-        // sinon on la traite comme une clé carlo
         $id = is_numeric($key) ? $key : $this->get($key);
 
         $rmSrcsetAttrs = function ($attrs) {
@@ -41,7 +50,7 @@ class CarloWpDriver extends carlo\BaseDriver implements carlo\DriverInterface
         if (!$img) {
             return "";
         }
-        if (empty($source_sizes) && empty($args)) {
+        if (empty($source_sizes) && empty($mobile_source_sizes)) {
             return $img;
         }
 
@@ -105,7 +114,7 @@ function carlo_acf_init()
         foreach ($types as $type => $definition) {
             if(isset($definition['wp_args'])){
                 $default_wp_args = ['public' => true];
-                $definition['wp_args'] = array_merge($definition['wp_args'], $default_wp_args);
+                $definition['wp_args'] = array_merge($default_wp_args, $definition['wp_args']);
                 register_post_type($type, $definition['wp_args']);
             }
 
@@ -127,7 +136,6 @@ function carlo_acf_init()
             if($structure){
               carlo_acf_template_blocs("type_{$type}", $structure, !empty($to_register));
             }
-
         }
     }
 }
@@ -149,9 +157,6 @@ function carlo_register_templates($post_type, $templates)
   );
 }
 
-/**
- * charge le menu qui va bien
- */
 function carlo_menu($menu)
 {
     add_filter("nav_menu_link_attributes", "_carlo_filter_nav_add_id", 10, 3);
@@ -219,7 +224,6 @@ function _carlo_nav_extract_elements(DomNode $node)
 function carlo_render_region($template, $region)
 {
     $templates = carlo_structure("templates");
-    //Si on est dans un custom type
     if(str_starts_with($template, 'type_')){
         $template = $post_type_name = get_post_type();
         $templates_type = carlo_structure("types")[$post_type_name]['template'];
@@ -241,7 +245,6 @@ function carlo_render_region($template, $region)
         if (isset($sections['_id'])) {
             carlo_render($sections['_id'], $content_blocks ?: []);
         } elseif ($content_blocks) {
-            // flexible repeater
             foreach ($content_blocks as $block) {
                 $block['_id'] = $block["acf_fc_layout"];
                 unset($block["acf_fc_layout"]);
