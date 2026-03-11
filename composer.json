@@ -2,5 +2,14 @@
 	"name": "puppets/wp-carlo",
 	"type": "wordpress-plugin",
 	"minimum-stability": "dev",
-	"prefer-stable": true
+	"prefer-stable": true,
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/Puppets-Developpement-Toolbox/library.git"
+		}
+	],
+	"require": {
+		"puppets/library": "1.x-dev"
+	}
 }
