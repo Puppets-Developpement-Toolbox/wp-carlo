@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38e679a7a018e13dc824d71d89030852",
+    "content-hash": "008ab5a6727cdc36aedb77f862257028",
     "packages": [
         {
             "name": "puppets/library",

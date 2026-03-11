@@ -2,16 +2,20 @@
 use Idleberg\WordpressViteAssets\WordpressViteAssets;
 
 if (!is_admin()) {
-    // $assetPath = ltrim(
-    //     str_replace(WP_HOME, "", plugin_dir_url( __FILE__ )),  //corrigé
-    //     "/"
-    // );
+    $assetPath = ltrim(
+        str_replace(
+            [WP_HOME, str_replace('https://', 'http://', WP_HOME)],
+            "",
+            get_stylesheet_directory_uri()
+             ),
+        "/"
+    );
     $viteAssets = new WordpressViteAssets(
         get_template_directory() . "/dist/.vite/manifest.json",
         get_template_directory_uri() . "/dist/"
     );
 
-    $viteAssets->inject("app/themes/cgf/js/main.js", [
+    $viteAssets->inject("{$assetPath}/js/main.js", [
         "integrity" => false,
     ]);
 }
