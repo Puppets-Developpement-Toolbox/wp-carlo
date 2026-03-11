@@ -105,7 +105,7 @@ function carlo_acf_init()
         foreach ($types as $type => $definition) {
             if(isset($definition['wp_args'])){
                 $default_wp_args = ['public' => true];
-                $definition['wp_args'] = array_merge($definition['wp_args'], $default_wp_args);
+                $definition['wp_args'] = array_merge($default_wp_args, $definition['wp_args']);
                 register_post_type($type, $definition['wp_args']);
             }
 
