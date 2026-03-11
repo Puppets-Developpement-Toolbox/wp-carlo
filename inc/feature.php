@@ -13,61 +13,54 @@ function carlo_disable_gutenberg($current_status, $post_type) {
  * Disable comment
  */
 add_action('admin_init', function () {
-  // Redirect any user trying to access comments page
-  global $pagenow;
-  if ($pagenow === 'edit-comments.php') {
-    wp_safe_redirect(admin_url());
-    exit;
-  }
-
-  // Remove comments metabox from dashboard
-  remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
-  // Disable support for comments and trackbacks in post types
-  foreach (get_post_types() as $post_type) {
-    if (post_type_supports($post_type, 'comments')) {
-      remove_post_type_support($post_type, 'comments');
-      remove_post_type_support($post_type, 'trackbacks');
+    global $pagenow;
+    if ($pagenow === 'edit-comments.php') {
+        wp_safe_redirect(admin_url());
+        exit;
     }
-  }
+    remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
+    foreach (get_post_types() as $post_type) {
+        if (post_type_supports($post_type, 'comments')) {
+            remove_post_type_support($post_type, 'comments');
+            remove_post_type_support($post_type, 'trackbacks');
+        }
+    }
 });
 
-// Close comments on the front-end
 add_filter('comments_open', '__return_false', 20, 2);
 add_filter('pings_open', '__return_false', 20, 2);
-
-// Hide existing comments
 add_filter('comments_array', '__return_empty_array', 10, 2);
 
-// Remove comments page in menu
 add_action('admin_menu', function () {
-  remove_menu_page('edit-comments.php');
+    remove_menu_page('edit-comments.php');
 });
 
-// Remove comments links from admin bar
 add_action('init', function () {
-  if (is_admin_bar_showing()) {
-    remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
-  }
+    if (is_admin_bar_showing()) {
+        remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
+    }
 });
 
-
-// disable acf admin
-if(!WP_DEBUG) {
-  add_filter('acf/settings/show_admin', '__return_false');
+// Disable acf admin
+if (!WP_DEBUG) {
+    add_filter('acf/settings/show_admin', '__return_false');
 }
 
+// Corrigé : plugin_dir_path() à la place de get_stylesheet_directory()
 add_filter('acf/settings/save_json', function ($path) {
-  $path = get_stylesheet_directory() . '/acf';
-  return $path;
+    $path = plugin_dir_path( __FILE__ ) . 'acf';
+    return $path;
 });
 
-add_filter('acf/settings/load_json', function( $paths ) {
-  unset($paths[0]);
-  $paths[] = get_stylesheet_directory() . '/acf';
-  return $paths;
+add_filter('acf/settings/load_json', function ($paths) {
+    unset($paths[0]);
+    $paths[] = plugin_dir_path( __FILE__ ) . 'acf';
+    return $paths;
 });
 
-add_theme_support( 'title-tag' );
+add_action('after_setup_theme', function () {
+    add_theme_support('title-tag');
+});
 
 /**
  * Add style select buttons to TinyMCE editor
@@ -85,12 +78,11 @@ function carlo_tiny_mce_add_clases($init_array) {
     $style_formats = array(
         array(
             'title' => 'Large paragraphe',
-            'help' => 'Ajoute une classe "large" au paragraphe',
+            'help'  => 'Ajoute une classe "large" au paragraphe',
             'selector' => 'p,h1,h2,h3,h4,h5,h6,div,ul,ol,li,a,span',
             'classes' => 'large'
         ),
     );
-
     $init_array['style_formats'] = json_encode($style_formats);
     return $init_array;
 }

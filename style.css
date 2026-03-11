@@ -1,3 +1,4 @@
+<<<<<<< 4.x
 /*
 Theme Name: Carlo
 Author: Puppets
@@ -11,3 +12,6 @@ Text Domain: carlo
 */
 @import './../../../../vendor/puppets/library/src/css/global.css';
 @source './../carlo/templates*';
+=======
+
+>>>>>>> 5.x

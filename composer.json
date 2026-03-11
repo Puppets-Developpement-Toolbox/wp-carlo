@@ -1,6 +1,6 @@
 {
-	"name": "puppets-wp-themes/carlo",
-	"type": "wordpress-theme",
+	"name": "puppets/wp-carlo",
+	"type": "wordpress-plugin",
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"repositories": [
