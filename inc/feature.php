@@ -46,15 +46,15 @@ if (!WP_DEBUG) {
     add_filter('acf/settings/show_admin', '__return_false');
 }
 
-// Corrigé : plugin_dir_path() à la place de get_stylesheet_directory()
-add_filter('acf/settings/save_json', function ($path) {
-    $path = plugin_dir_path( __FILE__ ) . 'acf';
-    return $path;
-});
-
 add_filter('acf/settings/save_json', function ($path) {
   $path = get_stylesheet_directory() . '/acf';
   return $path;
+});
+
+add_filter('acf/settings/load_json', function( $paths ) {
+  unset($paths[0]);
+  $paths[] = get_stylesheet_directory() . '/acf';
+  return $paths;
 });
 
 add_action('after_setup_theme', function () {
