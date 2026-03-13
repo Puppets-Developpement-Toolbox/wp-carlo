@@ -253,3 +253,7 @@ function carlo_render_region($template, $region)
         }
     }
 }
+
+function carlo_bootstrap() {
+    include __DIR__ . './../templates/layout.php';
+}
