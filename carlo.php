@@ -18,6 +18,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+$theme_structure = get_stylesheet_directory() . "/structure.yml";
+if(!file_exists($theme_structure)) {
+  // you are not using a Carlo compatible theme
+  return;
+}
+
+
 // Charge tous les fichiers PHP du dossier /inc du PLUGIN
 foreach ( glob( __DIR__ . '/inc/*.php' ) as $file ) {
     include_once $file;
