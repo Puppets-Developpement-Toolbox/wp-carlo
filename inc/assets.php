@@ -18,8 +18,6 @@ if (!WP_DEBUG && !is_admin()) {
     }
 }
 
-dump(get_stylesheet_directory() . "/dist/.vite/manifest.json");
-
 add_action("wp_enqueue_scripts", function () {
     $v = 1;
     $tpl = get_stylesheet_directory_uri();
