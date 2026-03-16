@@ -2,18 +2,23 @@
 use Idleberg\WordpressViteAssets\WordpressViteAssets;
 
 if (!WP_DEBUG && !is_admin()) {
-    $assetPath = ltrim(
-        str_replace(WP_HOME, "", get_stylesheet_directory_uri()),
-        "/"
-    );
-    $viteAssets = new WordpressViteAssets(
-        get_stylesheet_directory() . "/dist/.vite/manifest.json",
-        get_stylesheet_directory_uri() . "/dist/"
-    );
-    $viteAssets->inject("{$assetPath}/js/main.js", [
-        "integrity" => false,
-    ]);
+    if(file_exists(get_stylesheet_directory() . "/dist/.vite/manifest.json")) {
+        $assetPath = ltrim(
+            str_replace(WP_HOME, "", get_stylesheet_directory_uri()),
+            "/"
+        );
+        $viteAssets = new WordpressViteAssets(
+            get_stylesheet_directory() . "/dist/.vite/manifest.json",
+
+            get_stylesheet_directory_uri() . "/dist/"
+        );
+        $viteAssets->inject("{$assetPath}/js/main.js", [
+            "integrity" => false,
+        ]);
+    }
 }
+
+dump(get_stylesheet_directory() . "/dist/.vite/manifest.json");
 
 add_action("wp_enqueue_scripts", function () {
     $v = 1;
