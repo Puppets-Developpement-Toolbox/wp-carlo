@@ -215,6 +215,7 @@ function _carlo_nav_extract_elements(DomNode $node)
                 "data-object"
             )->nodeValue,
             "children" => _carlo_nav_extract_elements($node),
+            "classes" => $classes,
         ];
     }, iterator_to_array($uls[0]->childNodes));
     $items = array_filter($items);
