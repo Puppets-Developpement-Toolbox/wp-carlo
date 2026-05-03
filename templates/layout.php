@@ -6,6 +6,7 @@ $template = match (true) {
   is_404() => "error",
   is_page() => get_page_template_slug() ?: "default",
   is_single() => "type_" . get_post_type(),
+  default => "archive", // ← cas de secours
 };
 
 do_action("carlo_prerender", $template);
