@@ -3,7 +3,7 @@
  * Plugin Name: Carlo
  * Plugin URI: https://puppets.fr
  * Description: Carlo est le thème de base développé par Puppets développement
- * Version: 3.0
+ * Version: 5.0
  * Author: Puppets
  * Author URI: https://puppets.fr
  * Requires at least: 6.1
