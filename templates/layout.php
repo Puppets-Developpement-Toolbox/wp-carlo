@@ -11,6 +11,16 @@ $template = match (true) {
 
 do_action("carlo_prerender", $template);
 
+if (is_singular() && post_password_required()) {
+    carlo_render('global/html_start');
+    echo '<main id="main" class="flex-1 flex flex-col"><div class="[ section ] padding-15">';
+    echo get_the_password_form();
+    echo '</div></main>';
+    carlo_render('global/html_end');
+    ob_flush();
+    return;
+}
+
 carlo_render("global/html_start");
 
 if(is_page()) {
