@@ -22,6 +22,14 @@ class CarloWpDriver extends carlo\BaseDriver implements carlo\DriverInterface
             return $wp_path;
         }
 
+        // Fallback sur les templates du plugin wp-carlo
+        $plugin_templates = __DIR__ . '/../templates/';
+        foreach ($paths as $path) {
+            if (file_exists($plugin_templates . $path)) {
+                return $plugin_templates . $path;
+            }
+        }
+
         // Fallback sur le package (namespace enregistré via BaseDriver)
         return parent::getFile($type, $element, $variant, $namespace);
     }
