@@ -32,7 +32,7 @@ add_action("wp_enqueue_scripts", function () use($is_dev) {
     }
 });
 
-add_filter("script_loader_tag", "carlo_add_script_module", 10, 3);
+if ($is_dev) add_filter("script_loader_tag", "carlo_add_script_module", 10, 3);
 function carlo_add_script_module($tag, $handle, $src)
 {
     if ("carlo_script" === $handle) {
