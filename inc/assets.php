@@ -20,7 +20,7 @@ if (!$is_dev && !is_admin()) {
     }
 }
 
-add_action("wp_enqueue_scripts", function () {
+add_action("wp_enqueue_scripts", function () use($is_dev) {
     $v = 1;
     $tpl = get_stylesheet_directory_uri();
 
