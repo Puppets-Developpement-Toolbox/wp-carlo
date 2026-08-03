@@ -1,7 +1,9 @@
 <?php
 use Idleberg\WordpressViteAssets\WordpressViteAssets;
 
-if (!WP_DEBUG && !is_admin()) {
+$is_dev = WP_ENV === 'development';
+
+if (!$is_dev && !is_admin()) {
     if(file_exists(get_stylesheet_directory() . "/dist/.vite/manifest.json")) {
         $assetPath = ltrim(
             str_replace(WP_HOME, "", get_stylesheet_directory_uri()),
@@ -23,7 +25,7 @@ add_action("wp_enqueue_scripts", function () {
     $tpl = get_stylesheet_directory_uri();
 
 
-    if (WP_DEBUG) {
+    if ($is_dev) {
         $tpl = str_replace(WP_HOME, $_ENV["ASSET_BASE_URL"], $tpl);
         wp_enqueue_script("carlo_script", "{$tpl}/js/main.js", [], $v);
         wp_enqueue_style("carlo_style", "{$tpl}/css/global.css", [], $v);
