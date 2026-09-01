@@ -18,6 +18,7 @@ if(
   str_starts_with($_SERVER['REQUEST_URI'], '/app/uploads') &&
   !empty($_ENV['SFP_URL'])
 ) {
-  wp_redirect("{$_ENV['SFP_URL']}{$_SERVER['REQUEST_URI']}");
+  // wp_redirect("{$_ENV['SFP_URL']}{$_SERVER['REQUEST_URI']}");
+  header( "Location: {$_ENV['SFP_URL']}{$_SERVER['REQUEST_URI']}", true, '302' );
   die();
 }
