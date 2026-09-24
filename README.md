@@ -4,7 +4,6 @@ A powerful WordPress plugin that provides a YAML-based configuration system for 
 
 ## Documentation
 
-- **[Carlo.md](./Carlo.md)** - Documentation complète en français sur le moteur Carlo et le driver WordPress
 - **[README-AI.md](./README-AI.md)** - Technical documentation for AI agents and developers
 - **[docs/](./docs/)** - Additional technical documentation and analysis
 
@@ -410,11 +409,35 @@ Functions added by the wp-carlo plugin:
 
 ### Custom Post Types with Custom Templates
 
-You can create custom single and archive templates for your custom post types. See [Carlo.md](./Carlo.md) lines 158-277 for detailed examples of creating:
-- `single-[my-cpt].php` - Single post template for custom post type
-- `archive-[my-cpt].php` - Archive template for custom post type
+You can create custom single and archive templates for your custom post types, at the theme root:
 
-These allow you to bypass the default page-based approach and create dedicated templates for your custom post types.
+- `single-[my-cpt].php` - single post template
+- `archive-[my-cpt].php` - archive template
+
+These bypass the default region-based rendering. A template resolves the current context, renders `global/html_start`, its own markup, then `global/html_end`:
+
+```php
+<?php
+ob_start();
+$template = match (true) {
+  is_home()   => "archive",
+  is_404()    => "error",
+  is_page()   => get_page_template_slug() ?: "default",
+  is_single() => "type_" . get_post_type(),
+};
+
+do_action("carlo_prerender", $template);
+carlo_render("global/html_start");
+?>
+<main id="main" class="flex-1 flex flex-col gap-15">
+  <?php /* your markup, or carlo_render_region($template, $region) per region */ ?>
+</main>
+<?php
+carlo_render('global/html_end');
+ob_flush();
+```
+
+A custom post type can also be displayed inside a regular page by loading `sections/post:[my-cpt]` in a page template.
 
 ## Best Practices
 
@@ -423,8 +446,8 @@ These allow you to bypass the default page-based approach and create dedicated t
 3. **Leverage regions**: Organize content logically using regions
 4. **Field naming**: Use descriptive field names without prefixes
 5. **Version control ACF JSON**: Commit the `/acf` directory to version control
-6. **Component definitions**: Create both `.php` and `.yml` files for components (see Carlo.md:132-152)
-7. **Register image formats**: Pre-register all image sizes you'll use with `carlo_register_img_size()` (see Carlo.md:154-156)
+6. **Component definitions**: one directory per section or component, with a `.php` + `.yml` pair per variant (`base` is the default variant)
+7. **Register image formats**: pre-register every size used by the project with `carlo_register_img_size()`, in a file under the theme's `inc/`
 
 ## Troubleshooting
 

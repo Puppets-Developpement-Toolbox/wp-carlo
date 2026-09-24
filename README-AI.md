@@ -6,11 +6,10 @@ Carlo is a WordPress plugin that implements a YAML-based configuration system fo
 
 ## Documentation Structure
 
-This project has three documentation files:
+This project has two documentation files:
 
-1. **README.md** - User-facing documentation in English with usage examples
+1. **README.md** - User-facing documentation with usage examples
 2. **README-AI.md** (this file) - Technical documentation for AI agents with code flow details
-3. **[Carlo.md](./Carlo.md)** - French documentation on the Carlo templating engine and WordPress driver
 
 ## Carlo Architecture
 
@@ -21,7 +20,7 @@ Carlo consists of two main parts:
 
 The templating engine in `puppets/library` provides the core functions (`carlo_render`, `carlo_get`, `carlo_img`) and driver abstractions. This plugin extends the BaseDriver to create CarloWpDriver, which integrates with WordPress and automatically generates ACF field groups from YAML definitions.
 
-### Carlo Drivers (see Carlo.md:76-89)
+### Carlo Drivers
 
 Carlo can be used in different contexts through drivers:
 
@@ -36,8 +35,6 @@ Carlo can be used in different contexts through drivers:
    - Generates ACF field groups from YAML definitions
    - Integrates with WordPress template hierarchy
 
-For more details on drivers, see [Carlo.md](./Carlo.md) lines 76-89.
-
 ## Architecture
 
 ### Core Concepts
@@ -47,7 +44,7 @@ For more details on drivers, see [Carlo.md](./Carlo.md) lines 76-89.
 3. **Sections**: Content blocks that can be static or flexible (allowing multiple block types)
 4. **Components**: Reusable template parts
 5. **ACF Field Generation**: Automatic conversion of YAML definitions to ACF field groups
-6. **Template Resolution**: Multi-level template lookup system (child theme → parent theme → plugin namespaces)
+6. **Template Resolution**: Multi-level template lookup (active theme `templates/` → plugin `templates/` → registered namespaces). Since 5.x the theme is standalone: Carlo is a plugin, and it only boots when the active theme has a `structure.yml` at its root.
 
 ### File Organization
 
@@ -333,16 +330,47 @@ field_name:
 
 ### From puppets/library (carlo namespace)
 
-These functions are provided by the `puppets/library` dependency (see [Carlo.md](./Carlo.md) for detailed French documentation):
+These functions are provided by the `puppets/library` dependency:
 
-- `carlo_render(string $template, array $data): string` - Render template with data context (Carlo.md:9-24)
-- `carlo_get(string|null $key = null): mixed` - Get value from current rendering context (Carlo.md:26-43)
-- `carlo_img(string $key): string` - Generate responsive image HTML with WordPress optimization (Carlo.md:45-74)
+- `carlo_render(string $template, array $data): string` - Render template with data context
+- `carlo_get(string|null $key = null): mixed` - Get value from current rendering context; without a key, the whole array
+- `carlo_component(string|array $component): string` - Render a sub-component from data carrying `_id` (or `acf_fc_layout`)
+- `carlo_img(...)` - Responsive image HTML, see below
 - `carlo_structure(string $key)` - Get structure definition from YAML
 - `carlo_driver(DriverInterface $driver)` - Set the driver instance
 - `carlo_register(string $structure_path)` - Register a structure YAML file
 
-For detailed documentation on the Carlo templating engine and image handling, refer to [Carlo.md](./Carlo.md).
+**Carlo escapes nothing.** Escaping is the developer's responsibility: `esc_html`, `esc_attr`, `esc_url`, `wp_kses_post` depending on context.
+
+#### `carlo_img`
+
+```php
+carlo_img(
+  string|int   $key,              // image key in the template data, or an attachment ID
+  string|array $formats = null,   // default format, or [default, '(media query)' => format, ...]
+  string|int   $alt_key = null,   // alternative image for art direction (key or ID)
+  array        $alt_formats = [], // ['(media query)' => format, ...] for the alternative image
+  array        $attributes = []   // HTML attributes, detected by the presence of a "class" key
+): string
+```
+
+Argument parsing, in order:
+
+1. **Attributes** — if the *last* argument is an array containing a `class` key, it is removed and its entries are added to the `<img>` tag. The `class` key is what distinguishes it from a format array; without it, an array is read as formats.
+2. **Main image** — `$key` is either a key in the template data or an attachment ID (useful inside loops). `$formats` is a single format string, or an array whose entry at index `0` is the default format and whose string keys map a media query to a format.
+3. **Alternative image** (optional) — served on the media queries listed in `$alt_formats`, which contains only `media query => format` entries.
+
+With media queries, the output is a `<picture>`: one `<source>` per media query, and an `<img>` fallback carrying the attributes.
+
+A format is the name of a registered WordPress image size, either native (`full`, `thumbnail`) or registered by the project through `carlo_register_img_size()` (see below). Project sizes are named `[width]x[height]:[crop]`. **Without the `:crop` suffix the image is cropped** (`100x200` is equivalent to `100x200:1`); use `100x200:0` to resize without cropping. `100` is width only, `x200` height only. Note that `100x200` and `100x200:1` are two distinct registered sizes despite rendering identically.
+
+```php
+carlo_img('hero_img', ['70x70', '(min-width: 1024px)' => '1600x900']);
+carlo_img('hero_img', ['70x70', '(min-width: 1024px)' => '1600x900'], 'hero_wide_img', ['(min-width: 2024px)' => '1600x900']);
+carlo_img($slide['image'], '435x363', ['class' => 'object-cover']);
+```
+
+*Current limitation: the WordPress driver requires a default format (`string $default_size`); pass `'full'` for the original size until the driver accepts a missing format.*
 
 ### From carlo.php (inc/carlo.php)
 
@@ -447,26 +475,27 @@ In `templates/sections/hero.php`:
 
 **Response**: Renders posts using `carlo_render('components/actu-list-element', ['post' => $post])`
 
-## Component Definition (see Carlo.md:132-152)
+## Component Definition
 
-Components are defined in the theme's `templates/` directory with two files:
-- **`.php`** - Implementation (the template code)
-- **`.yml`** - Definition (field definitions)
+Sections and components live in the theme's `templates/` directory, **one directory per section**, with a `.php` + `.yml` pair per variant. `base` is the default variant.
 
-Example: `templates/blocs/quote.php` + `templates/blocs/quote.yml` → component ID: `blocs/quote`
+```
+templates/sections/hero/
+├── base.php      # default variant, loaded by  !load sections/hero
+├── base.yml
+├── slider.php    # variant, loaded by          !load sections/hero:slider
+└── slider.yml
+```
 
-The YAML file defines all input fields needed for the component. Keys prefixed with `_` are internal configuration keys.
+The `.yml` file declares the input fields; a `_label` at its root gives the label shown in the admin. Keys prefixed with `_` are internal configuration keys.
 
-For detailed component definition syntax, see [Carlo.md](./Carlo.md) lines 132-152.
+The same layout applies to `templates/components/<name>/`, used for parts reused across sections.
 
-## Image Format Registration (see Carlo.md:154-156)
+## Image Format Registration
 
 To resize images using WordPress's image engine, all formats must be pre-registered using `carlo_register_img_size()` which takes a list of format strings (e.g., `['100x200', '1600x900:1']`).
 
-For format syntax and details, see:
-- [Carlo.md](./Carlo.md) lines 45-74 for `carlo_img()` usage
-- [Carlo.md](./Carlo.md) lines 154-156 for format registration
-- `inc/media.php` for implementation
+For format syntax, see `carlo_img` above. Implementation lives in `inc/media.php`.
 
 ## Common Patterns for AI Agents
 
@@ -482,7 +511,7 @@ For format syntax and details, see:
            field2: wysiwyg
    ```
 
-2. Create template file: `templates/sections/new_section.php`:
+2. Create template file: `templates/sections/new_section/base.php`:
    ```php
    <section class="new-section">
      <h2><?= carlo_get('field1') ?></h2>
@@ -490,7 +519,7 @@ For format syntax and details, see:
    </section>
    ```
 
-3. Optionally create component definition: `templates/sections/new_section.yml` (see Carlo.md:132-152)
+3. Create the matching field definition: `templates/sections/new_section/base.yml`
 
 ### Adding a Custom Post Type
 
