@@ -1,15 +1,6 @@
 <?php
 
 /**
- * Disable Gutemberg
- */
-add_filter('use_block_editor_for_post_type', 'carlo_disable_gutenberg', 10, 2);
-function carlo_disable_gutenberg($current_status, $post_type) {
-    if ($post_type === 'page') return false;
-    return $current_status;
-}
-
-/**
  * Disable comment
  */
 add_action('admin_init', function () {
@@ -60,6 +51,8 @@ add_filter('acf/settings/load_json', function( $paths ) {
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    // Retire les styles par défaut de l'éditeur (police serif…) : l'aperçu suit le CSS du thème.
+    add_theme_support('editor-styles');
 });
 
 /**

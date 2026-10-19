@@ -23,11 +23,7 @@ if (is_singular() && post_password_required()) {
 
 carlo_render("global/html_start");
 
-if(is_page()) {
-  $regions = carlo_structure("templates")[$template] ?? null;
-} elseif(is_single() && !is_404()) {
-  $regions = (carlo_structure("types") ?? [])[get_post_type()]['template'] ?? null;
-}
+$regions = is_singular() ? carlo_post_template(get_queried_object()) : null;
 
 $template_file = get_theme_file_path("/templates/{$template}.php");
 

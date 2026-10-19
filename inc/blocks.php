@@ -201,3 +201,79 @@ function carlo_acf_fields($key, $definition, $parent_key)
 
     return $acf;
 }
+
+/**
+ * Nom du bloc d'une section : sections/text:base → acf/carlo-sections-text.
+ * Le préfixe acf/ est imposé par ACF.
+ */
+function carlo_block_name($id)
+{
+    return 'acf/' . carlo_block_slug($id);
+}
+
+function carlo_block_slug($id)
+{
+    return 'carlo-' . trim(preg_replace('/[^a-z0-9]+/', '-', strtolower(preg_replace('/:base$/', '', $id))), '-');
+}
+
+/**
+ * Enregistre un bloc ACF par section proposée dans une région.
+ */
+function carlo_register_section_blocks()
+{
+    $sections = [];
+    foreach (['page', ...array_keys(carlo_structure('types') ?? [])] as $post_type) {
+        foreach (carlo_templates($post_type) as $template) {
+            foreach (carlo_structure_fields($template) as $region) {
+                $sections += carlo_region($region)['sections'];
+            }
+        }
+    }
+    foreach ($sections as $id => $definition) {
+        carlo_register_section_block($id, $definition);
+    }
+}
+
+function carlo_register_section_block($id, $definition)
+{
+    [, $name, $variant] = carlo_explode_id($id);
+    $slug = carlo_block_slug($id);
+    $title = $definition['_label'] ?? ucfirst(str_replace('_', ' ', $variant === 'base' ? $name : "{$name} {$variant}"));
+    $fields = carlo_structure_fields($definition);
+
+    acf_register_block_type([
+        'name' => $slug,
+        'title' => $title,
+        'category' => 'design',
+        // ancestor et non parent : parent l'emporterait sur les allowedBlocks de la région.
+        'ancestor' => ['carlo/region'],
+        'supports' => ['align' => false],
+        'render_callback' => function ($block, $content, $is_preview) use ($id, $title, $fields) {
+            $data = get_fields() ?: [];
+            $filled = false;
+            array_walk_recursive($data, function ($value) use (&$filled) {
+                $filled = $filled || !empty($value);
+            });
+            // Section pas encore remplie : la library ne tolère pas les données absentes.
+            if ($fields && !$filled) {
+                if ($is_preview) {
+                    echo '<p class="carlo-placeholder">' . esc_html("{$title} : à remplir dans le panneau Réglages.") . '</p>';
+                }
+                return;
+            }
+            carlo_render($id, $data);
+        },
+    ]);
+
+    acf_add_local_field_group([
+        'key' => "group_{$slug}",
+        'title' => $title,
+        'fields' => array_map(
+            'carlo_acf_fields',
+            array_keys($fields),
+            $fields,
+            array_fill(0, count($fields), "field_{$slug}")
+        ),
+        'location' => [[['param' => 'block', 'operator' => '==', 'value' => "acf/{$slug}"]]],
+    ]);
+}

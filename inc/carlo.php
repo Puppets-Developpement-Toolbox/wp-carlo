@@ -107,62 +107,21 @@ carlo_register($child_theme_structure);
 
 function carlo_acf_init()
 {
-    $templates = carlo_structure("templates");
-    if (is_array($templates)) {
-        $to_register = [];
-        foreach ($templates as $template => $definition) {
-            carlo_acf_template_blocs($template, $definition, true);
-            $to_register[$template] = $definition['_label'];
-        }
-        carlo_register_templates('page', $to_register);
-    }
-
     $types = carlo_structure("types");
     if (is_array($types)) {
         foreach ($types as $type => $definition) {
             if(isset($definition['wp_args'])){
-                $default_wp_args = ['public' => true];
-                $definition['wp_args'] = array_merge($default_wp_args, $definition['wp_args']);
-                register_post_type($type, $definition['wp_args']);
-            }
-
-            $to_register = [];
-            if(!empty($definition["templates"])){
-                foreach ($definition["templates"] as $template => $template_definition) {
-                    carlo_acf_template_blocs("type_{$type}__{$template}", $template_definition, true);
-                    $to_register[$template] = $template_definition["_label"];
+                // show_in_rest et editor : nécessaires à l'éditeur de blocs.
+                $wp_args = array_merge(['public' => true, 'show_in_rest' => true], $definition['wp_args']);
+                if (isset($wp_args['supports'])) {
+                    $wp_args['supports'][] = 'editor';
                 }
-                carlo_register_templates($type, $to_register);
-            }
-
-            $structure = null;
-            if(isset($definition["template"])) $structure = $definition["template"];
-            elseif(isset($definition["templates"]["default"])) {
-              $structure = $definition["templates"]["default"];
-              unset($definition["templates"]["default"]);
-            }
-            if($structure){
-              carlo_acf_template_blocs("type_{$type}", $structure, !empty($to_register));
+                register_post_type($type, $wp_args);
             }
         }
     }
-}
 
-function carlo_register_templates($post_type, $templates)
-{
-  add_filter(
-    "theme_{$post_type}_templates",
-    function($registred_templates, $wp_theme, $post) use($templates) {
-      foreach ($templates as $template => $label) {
-        if (!isset($registred_templates[$template]) && $template !== "archive") {
-          $registred_templates[$template] = $label;
-        }
-      }
-      return $registred_templates;
-    },
-    PHP_INT_MAX,
-    3
-  );
+    carlo_register_section_blocks();
 }
 
 function carlo_menu($menu)
@@ -230,34 +189,16 @@ function _carlo_nav_extract_elements(DomNode $node)
     return $items;
 }
 
+/**
+ * Rend les sections d'une région, lues dans le contenu (blocs) du contenu affiché.
+ * $template n'est plus utilisé, il est conservé pour les thèmes qui l'appellent.
+ */
 function carlo_render_region($template, $region)
 {
-    $templates = carlo_structure("templates");
-    if(str_starts_with($template, 'type_')){
-        $template = $post_type_name = get_post_type();
-        $templates_type = carlo_structure("types")[$post_type_name]['template'];
-        $templates[$post_type_name] = [
-            $region => $templates_type[$region]
-        ];
-    }
-
-    if (
-        !isset($templates[$template]) ||
-        !isset($templates[$template][$region])
-    ) {
-        return;
-    }
-    $region_sections = $templates[$template][$region];
-
-    foreach ((array) $region_sections as $i => $sections) {
-        $content_blocks = get_field($region, get_queried_object_id())[$i] ?? [];
-        if (isset($sections['_id'])) {
-            carlo_render($sections['_id'], $content_blocks ?: []);
-        } elseif ($content_blocks) {
-            foreach ($content_blocks as $block) {
-                $block['_id'] = $block["acf_fc_layout"];
-                unset($block["acf_fc_layout"]);
-                carlo_render($block['_id'], $block);
+    foreach (parse_blocks(get_post_field('post_content', get_queried_object_id())) as $block) {
+        if ($block['blockName'] === 'carlo/region' && ($block['attrs']['region'] ?? null) === $region) {
+            foreach ($block['innerBlocks'] as $section) {
+                echo render_block($section);
             }
         }
     }

@@ -1,0 +1,32 @@
+/* Éditeur uniquement : rend chaque région visible et nommée pour le contributeur. */
+.carlo-region {
+  margin-block: 1.5rem;
+  padding: 0.75rem;
+  border: 1px dashed #757575;
+}
+
+.carlo-region__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-block-end: 0.75rem;
+  font: 600 0.75rem/1.4 system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1e1e1e;
+}
+
+.carlo-region__count {
+  font-weight: 400;
+  color: #757575;
+}
+
+/* Section insérée mais pas encore remplie (cf. carlo_register_section_block). */
+.carlo-placeholder {
+  margin: 0;
+  padding: 1rem;
+  background: #f0f0f0;
+  font: 0.875rem/1.5 system-ui, sans-serif;
+  color: #1e1e1e;
+}
