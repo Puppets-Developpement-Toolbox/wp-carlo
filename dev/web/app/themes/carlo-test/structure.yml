@@ -1,0 +1,36 @@
+# Structure du thème de test : un modèle éditorial (blocs au choix), un modèle
+# templatisé (blocs figés) et un type de contenu.
+# Les sections viennent de puppets/library (templates/sections) : le thème n'en
+# définit aucune. Pour tester une section à soi, créer
+# templates/sections/<section>/base.php + base.yml dans ce thème.
+# Après toute modification : supprimer les JSON d'acf/ concernés et recharger l'admin.
+
+menus:
+  main: Menu principal
+
+regions:
+  header: En-tête
+  content: Contenu
+
+templates:
+  # Liste dynamique : le contributeur choisit et ordonne les blocs.
+  default:
+    _label: Page éditoriale
+    content:
+      - [!load sections/text, !load sections/image, !load sections/quote]
+
+  # Listes statiques : exactement ces blocs, dans cet ordre.
+  landing:
+    _label: Page templatisée
+    header:
+      - !load sections/image
+    content: [!load sections/text]
+
+types:
+  project:
+    wp_args:
+      label: Projets
+      supports: [title, thumbnail]
+    template:
+      _label: Fiche projet
+      content: [!load sections/text]

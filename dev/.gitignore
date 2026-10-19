@@ -1,0 +1,16 @@
+# Dépendances (Composer, pnpm)
+/vendor/
+/node_modules/
+/.pnpm-store/
+
+# Cœur WordPress, plugins installés par Composer, fichiers générés
+/web/wp/
+/web/app/plugins/
+/web/app/mu-plugins/
+/web/app/uploads/
+/web/app/debug.log
+/web/app/themes/*/dist/
+/web/app/themes/*/acf/
+
+# Licence ACF Pro : ne jamais versionner
+/auth.json

@@ -1,0 +1,51 @@
+{
+  "name": "puppets/wp-carlo-dev",
+  "type": "project",
+  "license": "proprietary",
+  "description": "Environnement de développement du plugin wp-carlo (Bedrock + Lando)",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://connect.advancedcustomfields.com"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Puppets-Developpement-Toolbox/library.git"
+    }
+  ],
+  "require": {
+    "php": ">=8.3",
+    "composer/installers": "^2.3",
+    "oscarotero/env": "^2.1",
+    "roots/wordpress": "^7.0",
+    "roots/wp-config": "^1.0",
+    "puppets/library": "1.x-dev",
+    "idleberg/wordpress-vite-assets": "^0.9",
+    "wpengine/advanced-custom-fields-pro": "*"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/installers": true,
+      "roots/wordpress-core-installer": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "installer-paths": {
+      "web/app/mu-plugins/{$name}/": [
+        "type:wordpress-muplugin"
+      ],
+      "web/app/plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ],
+      "web/app/themes/{$name}/": [
+        "type:wordpress-theme"
+      ]
+    },
+    "wordpress-install-dir": "web/wp"
+  }
+}

@@ -1,0 +1,2 @@
+# Le dossier dev/ (environnement de développement) n'est pas livré avec le plugin installé par Composer.
+/dev export-ignore

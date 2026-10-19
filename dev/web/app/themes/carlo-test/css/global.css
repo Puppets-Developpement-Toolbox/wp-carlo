@@ -1,0 +1,13 @@
+/* Styles minimaux, juste de quoi lire le rendu des blocs (pas de Tailwind ici). */
+body {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}

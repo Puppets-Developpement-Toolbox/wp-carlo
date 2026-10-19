@@ -359,6 +359,8 @@ Carlo makes several opinionated modifications to WordPress:
 
 ## Development
 
+A ready-to-use local environment (Bedrock + Lando, with a test theme) lives in **[dev/](./dev/README.md)**: the plugin is mounted live, so code changes show up on reload.
+
 ### Vite Integration
 
 In development mode (`WP_DEBUG = true`):

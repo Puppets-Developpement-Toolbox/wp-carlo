@@ -1,0 +1,56 @@
+# Environnement de développement du plugin wp-carlo (Bedrock + Lando).
+# Mode d'emploi : dev/README.md
+name: carlo-dev
+recipe: wordpress
+config:
+  webroot: web
+  php: '8.3'
+  database: mysql:8.0
+  xdebug: false
+
+services:
+  appserver:
+    overrides:
+      environment:
+        # Lus par config/application.php (Bedrock) et par le plugin (ASSET_BASE_URL).
+        # Passer WP_ENV à production pour tester le chargement des assets via le manifest
+        # (lando pnpm build, puis lando rebuild).
+        WP_ENV: development
+        WP_HOME: https://carlo-dev.lndo.site
+        WP_SITEURL: https://carlo-dev.lndo.site/wp
+        ASSET_BASE_URL: https://front.carlo-dev.lndo.site
+        DB_NAME: wordpress
+        DB_USER: wordpress
+        DB_PASSWORD: wordpress
+        DB_HOST: database
+      volumes:
+        # Le plugin est le dépôt parent, monté en direct : une modification du code
+        # est visible au rechargement de la page, sans réinstaller quoi que ce soit.
+        - ..:/app/web/app/plugins/wp-carlo
+
+  # Serveur Vite : sert js/main.js et css/global.css du thème de test, comme le ferait
+  # un projet réel en développement (voir vite.config.js).
+  front:
+    type: node:22
+    scanner: false
+    ssl: true
+    sslExpose: false
+    build_as_root:
+      # L'image node de Lando ne fournit pas pnpm ; on le lie dans le PATH.
+      - npm install -g pnpm@10
+      - ln -sf "$(npm prefix -g)/bin/pnpm" /usr/local/bin/pnpm
+    build:
+      - pnpm install
+    command: pnpm dev
+
+proxy:
+  front:
+    - front.carlo-dev.lndo.site
+
+tooling:
+  pnpm:
+    service: front
+  install:
+    service: appserver
+    description: Installe WordPress, active ACF Pro, Carlo et le thème de test, crée des pages d'exemple
+    cmd: bash /app/bin/install.sh
