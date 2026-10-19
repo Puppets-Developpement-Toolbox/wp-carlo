@@ -10,6 +10,11 @@ config:
 
 services:
   appserver:
+    # Navigateur headless (Chromium piloté par Playwright) pour tester l'éditeur de blocs :
+    # `lando browser tests/browser/editor.py`.
+    build_as_root:
+      - apt-get update && apt-get install -y --no-install-recommends chromium python3 python3-venv fonts-dejavu-core
+      - python3 -m venv /opt/browser && /opt/browser/bin/pip install --quiet playwright==1.64.0
     overrides:
       environment:
         # Lus par config/application.php (Bedrock) et par le plugin (ASSET_BASE_URL).
@@ -50,6 +55,10 @@ proxy:
 tooling:
   pnpm:
     service: front
+  browser:
+    service: appserver
+    description: Lance un scénario de test dans Chromium headless (ex. lando browser tests/browser/editor.py)
+    cmd: /opt/browser/bin/python
   install:
     service: appserver
     description: Installe WordPress, active ACF Pro, Carlo et le thème de test, crée des pages d'exemple

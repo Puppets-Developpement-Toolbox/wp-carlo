@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 /**
@@ -14,6 +15,7 @@ const theme = "app/themes/carlo-test";
 
 export default defineConfig({
   root,
+  plugins: [tailwindcss()],
   server: {
     host: true,
     port: 80,

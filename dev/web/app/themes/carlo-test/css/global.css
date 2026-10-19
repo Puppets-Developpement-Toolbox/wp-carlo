@@ -1,13 +1,9 @@
-/* Styles minimaux, juste de quoi lire le rendu des blocs (pas de Tailwind ici). */
-body {
-  max-width: 60rem;
-  margin: 0 auto;
-  padding: 1rem;
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
-}
+/*
+ * Styles de puppets/library (Tailwind 4 : couleurs, polices, breakpoints laptop/desktop/wide),
+ * comme sur un projet réel : les sections s'affichent avec leur design, sur le site comme
+ * dans l'aperçu de l'éditeur de blocs.
+ */
+@import "../../../../../vendor/puppets/library/library.css";
 
-img {
-  max-width: 100%;
-  height: auto;
-}
+/* Classes utilisées par les gabarits du plugin (layout, html_start…). */
+@source "../../../plugins/wp-carlo/templates";

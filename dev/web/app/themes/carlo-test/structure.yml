@@ -1,5 +1,5 @@
-# Structure du thème de test : un modèle éditorial (blocs au choix), un modèle
-# templatisé (blocs figés) et un type de contenu.
+# Structure du thème de test : deux modèles de page et un type de contenu.
+# Chaque région est un bloc Gutenberg qui n'accepte que les sections qu'elle cite.
 # Les sections viennent de puppets/library (templates/sections) : le thème n'en
 # définit aucune. Pour tester une section à soi, créer
 # templates/sections/<section>/base.php + base.yml dans ce thème.
@@ -13,18 +13,19 @@ regions:
   content: Contenu
 
 templates:
-  # Liste dynamique : le contributeur choisit et ordonne les blocs.
+  # Le contributeur choisit et ordonne les blocs, 3 au maximum.
   default:
     _label: Page éditoriale
     content:
-      - [!load sections/text, !load sections/image, !load sections/quote]
+      - _blocs: [!load sections/text, !load sections/image, !load sections/quote]
+        _max: 3
 
-  # Listes statiques : exactement ces blocs, dans cet ordre.
+  # Deux régions, chacune limitée à une seule section possible.
   landing:
     _label: Page templatisée
     header:
       - !load sections/image
-    content: [!load sections/text]
+    content: [!load sections/text, !load sections/quote]
 
 types:
   project:

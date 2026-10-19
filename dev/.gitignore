@@ -14,3 +14,7 @@
 
 # Licence ACF Pro : ne jamais versionner
 /auth.json
+
+# Captures et cache Python des tests navigateur
+/tests/browser/shots/
+/tests/browser/__pycache__/
