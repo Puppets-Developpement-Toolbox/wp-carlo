@@ -29,3 +29,8 @@ if(!file_exists($theme_structure)) {
 foreach ( glob( __DIR__ . '/inc/*.php' ) as $file ) {
     include_once $file;
 }
+
+// Catalogue des composants (/?carlo-stories) : public, donc jamais chargé en production.
+if ( ( defined( 'WP_ENV' ) ? WP_ENV : wp_get_environment_type() ) !== 'production' ) {
+    include_once __DIR__ . '/stories/stories.php';
+}

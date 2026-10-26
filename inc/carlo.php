@@ -45,6 +45,22 @@ class CarloWpDriver extends carlo\BaseDriver implements carlo\DriverInterface
     }
 
 
+    /**
+     * Mêmes dossiers que getFile(), pour l'introspection (catalogue, chatbot) : thème enfant, thème
+     * parent, templates du plugin, puis le namespace (library). getFile() garde son propre ordre de
+     * priorité, celui de locate_template().
+     */
+    public function getSearchPaths(string $namespace = 'default'): array
+    {
+        $prefix = $namespace === 'default' ? '' : "/@{$namespace}";
+        $dirs = array_filter([
+            get_stylesheet_directory() . "/templates{$prefix}",
+            get_template_directory() . "/templates{$prefix}",
+            dirname(__DIR__) . "/templates{$prefix}",
+        ], 'is_dir');
+        return array_values(array_unique([...$dirs, ...parent::getSearchPaths($namespace)]));
+    }
+
     public function img(
         string $key,
         string $default_size,

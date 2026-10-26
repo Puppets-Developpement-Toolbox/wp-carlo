@@ -1,0 +1,5 @@
+# Les références sont des ID de contenus publiés : à adapter à chaque site.
+deux_pages:
+  _label: Deux contenus liés
+  titre: À lire aussi
+  pages: [5, 6]

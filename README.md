@@ -380,6 +380,41 @@ Template files are resolved in this order:
 2. Parent theme `templates/` directory
 3. Plugin namespaced directories (via `puppets/library`)
 
+### Component Catalogue
+
+A Storybook-like catalogue of every section and component (library, plugin and theme), each rendered in
+isolation with the theme's CSS and JS.
+
+- **Catalogue**: `/?carlo-stories`. **Single story** (used by the catalogue's iframe):
+  `/?carlo-stories=frame&id=sections/quote&story=complete`.
+- **Not loaded in production** (`WP_ENV`): it is public, without login, everywhere else (development,
+  staging) and sends `X-Robots-Tag: noindex`.
+- Elements are discovered by the library's introspection (`carlo_get_available_sections()`,
+  `carlo_get_available_components()`), in the driver's search paths (`CarloWpDriver::getSearchPaths()`).
+  Only discovered elements can be rendered.
+
+Stories are written in a `<variant>.stories.yml` file next to the template, in the theme, the plugin or the
+library (first found wins): e.g. `templates/sections/quote/base.stories.yml`. Each key is a story; values use
+the block attributes format and go through the same formatting as on the site:
+
+```yaml
+complete:
+  _label: Citation complète
+  titre: Une < phrase > qui compte
+  quote:
+    quote: <p>La simplicité est la sophistication suprême.</p>
+    author: Léonard de Vinci
+image_only:
+  image: 1600x900          # placeholder image (or a media ID)
+nested:
+  elements:                # container: child sections described by their _id
+    - _id: sections/quote:base
+      titre: Dans une super section
+```
+
+Elements without stories are listed as « aucun exemple », with their fields. Browser test:
+`lando browser tests/browser/stories.py`.
+
 ## API Reference
 
 ### Core Functions (from puppets/library)

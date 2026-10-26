@@ -1,0 +1,9 @@
+# Les sections d'un conteneur sont décrites par leur _id, comme les blocs enfants dans l'éditeur.
+texte_et_citation:
+  _label: Texte et citation
+  elements:
+    - _id: sections/quote:base
+      titre: Dans une super section
+      quote:
+        quote: <p>Le fond change selon le contexte.</p>
+        author: L'équipe

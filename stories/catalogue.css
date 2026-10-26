@@ -1,0 +1,336 @@
+/* Catalogue des composants (cf. stories/templates/catalogue.php). Indépendant du CSS du thème, qui ne
+   s'applique qu'aux aperçus, dans l'iframe. */
+
+:root {
+  --bg: #ffffff;
+  --bg-muted: #f6f7f7;
+  --text: #1e1e1e;
+  --text-muted: #5e5e5e;
+  --border: #dcdcde;
+  --accent: #2c56d6;
+  --accent-bg: #edf1fd;
+  --error: #b32d2e;
+  --error-bg: #fcf0f1;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1c1e;
+    --bg-muted: #26262a;
+    --text: #f0f0f0;
+    --text-muted: #a8a8ad;
+    --border: #3a3a3f;
+    --accent: #8aa8ff;
+    --accent-bg: #2a3150;
+    --error: #ff8a8a;
+    --error-bg: #3a2224;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 18rem minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+code {
+  font: 0.875em/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: 1rem;
+  inset-block-start: -3rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg);
+  z-index: 1;
+}
+
+.skip-link:focus {
+  inset-block-start: 1rem;
+}
+
+/* Navigation */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 1.25rem 1rem;
+  border-inline-end: 1px solid var(--border);
+  background: var(--bg-muted);
+}
+
+.sidebar__title {
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+.sidebar__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sidebar__title span {
+  display: block;
+  font-weight: 400;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.search input {
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: inherit;
+  font: inherit;
+}
+
+.sidebar h2 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.count {
+  font-weight: 400;
+}
+
+.sidebar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar ul ul {
+  margin-inline-start: 0.75rem;
+}
+
+.sidebar a,
+.nav__name {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav__name {
+  color: var(--text-muted);
+}
+
+.sidebar a:hover {
+  background: var(--accent-bg);
+}
+
+.sidebar a[aria-current="page"] {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* Contenu */
+
+.main {
+  padding: 1.5rem 2rem 3rem;
+  min-width: 0;
+}
+
+.main h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.main h2 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.125rem;
+}
+
+.main__header code {
+  color: var(--text-muted);
+}
+
+.lead {
+  font-size: 1.125rem;
+}
+
+.notice {
+  padding: 0.75rem 1rem;
+  border-inline-start: 4px solid var(--accent);
+  background: var(--accent-bg);
+}
+
+.notice--error {
+  border-color: var(--error);
+  background: var(--error-bg);
+}
+
+.stories ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stories a {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.stories a[aria-current="page"] {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-block-end: 0.75rem;
+}
+
+.viewports {
+  display: flex;
+}
+
+.viewports button {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.viewports button + button {
+  margin-inline-start: -1px;
+}
+
+.viewports button:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.viewports button:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.viewports button[aria-pressed="true"] {
+  position: relative;
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Fond quadrillé : on distingue l'aperçu (fond du thème) du catalogue. */
+.frame {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: repeating-conic-gradient(var(--bg-muted) 0 25%, var(--bg) 0 50%) 0 0 / 16px 16px;
+  overflow-x: auto;
+}
+
+.frame iframe {
+  display: block;
+  width: 100%;
+  min-height: 8rem;
+  margin-inline: auto;
+  border: 0;
+  background: #ffffff;
+  transition: width 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame iframe {
+    transition: none;
+  }
+}
+
+.table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+th,
+td {
+  padding: 0.5rem 0.75rem;
+  border-block-end: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+th {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Petits écrans : la navigation passe au-dessus du contenu. */
+@media (max-width: 782px) {
+  body {
+    display: block;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    max-height: 50vh;
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--border);
+  }
+
+  .main {
+    padding: 1.25rem 1rem 2rem;
+  }
+}

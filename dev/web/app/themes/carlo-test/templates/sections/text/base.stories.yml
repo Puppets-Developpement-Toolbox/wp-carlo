@@ -1,0 +1,17 @@
+court:
+  _label: Paragraphe court
+  content: <p>Un paragraphe simple, avec un <strong>mot en gras</strong> et un <a href="#">lien</a>.</p>
+riche:
+  _label: Texte riche (titres, listes)
+  content: |
+    <h2>Un intertitre</h2>
+    <p>Un paragraphe d'introduction suivi d'une liste.</p>
+    <ul>
+      <li>Premier point</li>
+      <li>Deuxième point, un peu plus long que le premier</li>
+    </ul>
+    <h3>Un sous-titre</h3>
+    <ol>
+      <li>Étape une</li>
+      <li>Étape deux</li>
+    </ol>

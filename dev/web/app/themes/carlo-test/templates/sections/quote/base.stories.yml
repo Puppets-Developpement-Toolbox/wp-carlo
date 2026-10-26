@@ -1,0 +1,12 @@
+# Exemples du catalogue (/?carlo-stories) : chaque clé est un exemple, au format des attributs du bloc.
+complete:
+  _label: Citation complète
+  titre: Une < phrase > qui compte
+  quote:
+    quote: <p>La simplicité est la sophistication suprême.</p>
+    author: Léonard de Vinci
+    charge: Peintre et ingénieur
+sans_titre:
+  _label: Sans titre, citation longue
+  quote:
+    quote: <p>Un texte de citation volontairement long, pour vérifier le comportement du composant quand le contenu dépasse largement une ligne sur mobile comme sur grand écran, sans auteur ni fonction.</p>
