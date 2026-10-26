@@ -1,0 +1,10 @@
+# Section de test des références (pages et projets liés).
+_label: Pages liées
+titre:
+  _type: text_short
+  _label: Titre
+pages:
+  _type: reference
+  _label: Contenus liés
+  _ref_type: [page, project]
+  _max: 4

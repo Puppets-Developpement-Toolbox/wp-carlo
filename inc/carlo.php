@@ -2,6 +2,16 @@
 
 class CarloWpDriver extends carlo\BaseDriver implements carlo\DriverInterface
 {
+    public function render(string $tpl, array $args = [])
+    {
+        // Emplacement des blocs enfants d'un conteneur dans l'aperçu de l'éditeur (cf. inc/blocks.php).
+        if ($tpl === 'carlo:inner') {
+            echo '<div data-carlo-inner></div>';
+            return;
+        }
+        return parent::render($tpl, $args);
+    }
+
     public function getFile(string $type, string $element, string $variant = 'base', string $namespace = 'default')
     {
         $variant = $variant ?: "base";
@@ -99,13 +109,13 @@ HTML;
 }
 
 //////  ----
-add_action("acf/init", "carlo_acf_init");
+add_action("init", "carlo_init");
 
 carlo_driver(new CarloWpDriver());
 $child_theme_structure = get_stylesheet_directory() . "/structure.yml";
 carlo_register($child_theme_structure);
 
-function carlo_acf_init()
+function carlo_init()
 {
     $types = carlo_structure("types");
     if (is_array($types)) {

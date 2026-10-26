@@ -1,0 +1,83 @@
+/* Formulaire des sections dans le panneau Réglages (cf. assets/sections.js). */
+
+/* Panneau élargi sur les contenus Carlo, pour le wysiwyg et ses barres d'outils. Toujours, et non
+   à la seule sélection d'une section : le contenu ne se recadre pas à chaque clic. Gutenberg fixe
+   la largeur en style inline, d'où !important. */
+@media (min-width: 782px) {
+  .carlo-editor .interface-complementary-area__fill,
+  .carlo-editor .interface-complementary-area {
+    width: clamp(280px, 32vw, 480px) !important;
+  }
+}
+.carlo-field + .carlo-field {
+  margin-block-start: 1.5rem;
+}
+
+.carlo-field__group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.carlo-field__label {
+  margin-block-end: 0.5rem;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.carlo-field__help {
+  margin-block: 0 0.5rem;
+  font-size: 12px;
+  color: #757575;
+}
+
+.carlo-field__media img {
+  display: block;
+  max-width: 100%;
+  margin-block-end: 0.5rem;
+}
+
+.carlo-field__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Groupes et éléments de répéteur imbriqués : un filet pour situer le niveau. */
+.carlo-field__group .carlo-field__group,
+.carlo-field__item {
+  padding-inline-start: 0.75rem;
+  border-inline-start: 2px solid #dddddd;
+}
+
+.carlo-field__item {
+  margin-block-end: 1rem;
+}
+
+.carlo-field__item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-block-end: 0.5rem;
+  font-weight: 600;
+}
+
+.carlo-field__item-header span {
+  flex: 1;
+}
+
+.carlo-field__references {
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.carlo-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-start: 1rem;
+}

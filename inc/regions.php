@@ -1,18 +1,25 @@
 <?php
 
 /**
+ * Enregistre un script ou une feuille de style de assets/, versionné par sa date de modification.
+ */
+function carlo_editor_asset($handle, $file, $deps = [])
+{
+    $src = plugins_url("assets/{$file}", dirname(__DIR__) . '/carlo.php');
+    $version = filemtime(dirname(__DIR__) . "/assets/{$file}");
+    str_ends_with($file, '.js')
+        ? wp_register_script($handle, $src, $deps, $version, true)
+        : wp_register_style($handle, $src, $deps, $version);
+}
+
+/**
  * Bloc « région » : conteneur des sections d'une région, sans champ propre.
  * Il n'enregistre que le nom de la région : les sections autorisées et le maximum sont
  * relus dans structure.yml à chaque ouverture de l'éditeur.
  */
 add_action('init', function () {
-    $plugin_file = dirname(__DIR__) . '/carlo.php';
-    $asset = fn($file) => [plugins_url("assets/{$file}", $plugin_file), filemtime(dirname(__DIR__) . "/assets/{$file}")];
-
-    [$src, $version] = $asset('region.js');
-    wp_register_script('carlo-region', $src, ['wp-blocks', 'wp-block-editor', 'wp-element', 'wp-data'], $version, true);
-    [$src, $version] = $asset('region.css');
-    wp_register_style('carlo-region', $src, [], $version);
+    carlo_editor_asset('carlo-region', 'region.js', ['wp-blocks', 'wp-block-editor', 'wp-element', 'wp-data']);
+    carlo_editor_asset('carlo-region', 'region.css');
 
     register_block_type('carlo/region', [
         'api_version' => 3,

@@ -1,4 +1,4 @@
-"""Scénario de test de l'éditeur de blocs : régions, sections autorisées, _max, rendu front.
+"""Scénario de test de l'éditeur de blocs : régions, sections autorisées, _max, saisie, rendu front.
 
 Usage : lando browser tests/browser/editor.py
 Les attentes sont lues dans window.carloRegions (donc dans structure.yml). Les pages créées
@@ -65,7 +65,8 @@ with admin_page() as page:
         canvas, post_id = open_new_page(page)
         created.append(post_id)
         region = regions(page)[0]
-        appender = canvas.locator(".carlo-region .block-editor-button-block-appender")
+        # Bouton d'ajout de la région, et non celui d'une section à blocs enfants (Super section).
+        appender = canvas.locator(".carlo-region__blocks > .block-list-appender .block-editor-button-block-appender")
         appender.first.click()
         titles = page.locator(".block-editor-block-types-list__item-title").all_text_contents()
         check("le sélecteur ne propose que les sections de la région", len(titles) == len(region["allowedBlocks"]), titles)
@@ -84,15 +85,20 @@ with admin_page() as page:
         check("message sur les sections vides", canvas.locator(".carlo-placeholder").count() > 0)
 
         # 3. Saisie d'une section Text, publication, rendu front
-        text_block = canvas.locator("[data-type='acf/carlo-sections-text']").first
+        text_block = canvas.locator("[data-type='carlo/sections-text']").first
         if text_block.count():
             text_block.click()
-            field = page.locator(".block-editor-block-inspector .acf-field[data-name='content']")
-            field.locator(".switch-html").click()
-            field.locator("textarea").fill(f"<p>{TEXT}</p>")
-            field.locator("textarea").dispatch_event("change")
+            inspector = page.locator(".block-editor-block-inspector")
+            text_block.locator("[data-carlo-wysiwyg]").click()  # texte saisi dans le bloc, via la modale
+            page.frame_locator(".components-modal__frame iframe").locator("body").click()
+            page.keyboard.type(TEXT)
+            page.get_by_role("button", name="Terminer").click()
+            inspector.get_by_label("Ancre").fill("test-ancre")
             page.wait_for_timeout(3000)
             check("aperçu mis à jour après saisie", TEXT in text_block.inner_text())
+            attrs = page.evaluate("""() => wp.data.select('core/block-editor').getSelectedBlock().attributes""")
+            check("saisie enregistrée dans les attributs du bloc",
+                  attrs.get("content") == f"<p>{TEXT}</p>" and attrs.get("ancre") == "test-ancre", attrs)
             shot(page, "editor")
 
             page.evaluate("wp.data.dispatch('core/editor').editPost({ title: 'Test navigateur', status: 'publish' })")

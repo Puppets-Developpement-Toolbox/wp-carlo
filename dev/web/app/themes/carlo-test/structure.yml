@@ -3,7 +3,8 @@
 # Les sections viennent de puppets/library (templates/sections) : le thème n'en
 # définit aucune. Pour tester une section à soi, créer
 # templates/sections/<section>/base.php + base.yml dans ce thème.
-# Après toute modification : supprimer les JSON d'acf/ concernés et recharger l'admin.
+# Les champs des sections deviennent les attributs de leur bloc : après toute modification,
+# il suffit de recharger l'éditeur.
 
 menus:
   main: Menu principal
@@ -13,12 +14,13 @@ regions:
   content: Contenu
 
 templates:
-  # Le contributeur choisit et ordonne les blocs, 3 au maximum.
+  # Le contributeur choisit et ordonne les blocs, 6 au maximum. « Pages liées » (référence) est
+  # définie dans ce thème ; « Super section » contient d'autres sections (blocs imbriqués).
   default:
     _label: Page éditoriale
     content:
-      - _blocs: [!load sections/text, !load sections/image, !load sections/quote]
-        _max: 3
+      - _blocs: [!load sections/text, !load sections/image, !load sections/quote, !load sections/related, !load sections/super_section]
+        _max: 6
 
   # Deux régions, chacune limitée à une seule section possible.
   landing:

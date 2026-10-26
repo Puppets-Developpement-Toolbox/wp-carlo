@@ -30,3 +30,27 @@
   font: 0.875rem/1.5 system-ui, sans-serif;
   color: #1e1e1e;
 }
+
+/* Aperçu saisissable des sections (cf. assets/sections.js). */
+.carlo-preview a {
+  cursor: default;
+}
+
+[data-carlo-wysiwyg] {
+  cursor: pointer;
+}
+
+[data-carlo-wysiwyg]:hover,
+[data-carlo-wysiwyg]:focus-visible {
+  outline: 1px dashed var(--wp-admin-theme-color, #3858e9);
+  outline-offset: 4px;
+}
+
+.carlo-inline-placeholder {
+  opacity: 0.62;
+}
+
+/* Blocs enfants d'un conteneur : zone visible même vide. */
+.carlo-inner {
+  min-height: 3rem;
+}

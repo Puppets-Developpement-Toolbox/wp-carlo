@@ -15,265 +15,295 @@ function carlo_structure_fields($definition)
     return $fields;
 }
 
-function carlo_acf_fields($key, $definition, $parent_key)
+// Champs saisis directement dans l'aperçu de l'éditeur (cf. carlo_field_values).
+const CARLO_INLINE_TYPES = ['text_short', 'text', 'wysiwyg'];
+
+/**
+ * Champ d'une section, sous une forme commune au PHP (attributs, rendu) et à l'éditeur
+ * (window.carloSections) : type, label, aide, options, sous-champs.
+ */
+function carlo_field($key, $definition)
 {
     if (empty($definition)) {
-        throw new Exception(
-            "le champ {$key} de {$parent_key} n'a pas de définition"
-        );
+        throw new Exception("le champ {$key} n'a pas de définition");
     }
 
-    if (is_array($definition) && !isset($definition["_type"])) {
-        $type = isset($definition["_id"]) ? "group" : "container";
-    } else {
-        $type = is_string($definition) ? $definition : $definition["_type"];
-    }
+    $type = is_string($definition)
+        ? $definition
+        : $definition['_type'] ?? (isset($definition['_id']) ? 'group' : 'container');
+    $definition = (array) $definition;
 
-    $acf_type = match ($type) {
-        "text_short" => "text",
-        "group" => "group",
-        "container" => "flexible_content",
-        "repeater" => "repeater",
-        "wysiwyg" => "wysiwyg",
-        "image" => "image",
-        "url" => "url",
-        "color" => "color_picker",
-        "text" => "textarea",
-        "number" => "number",
-        "choices" => "select",
-        "select" => "select", // @deprecated
-        "form" => "select",
-        "reference" => "relationship",
-        "boolean" => "true_false",
-        "taxonomy" => "taxonomy",
-        "date" => "date_picker",
-        "link" => "link",
-        "embed" => "oembed",
-        "file" => "file",
-        "datetime" => "date_time_picker"
+    $type = match (true) {
+        $type === 'select' => 'choices', // @deprecated
+        $type === 'image' && !empty($definition['_multi']) => 'gallery',
+        default => $type,
     };
 
-    if (isset($definition["_label"])) {
-        $label = $definition["_label"];
-        unset($definition["_label"]);
-    } else {
-        $label = str_replace("_", " ", ucfirst($key));
-    }
-
-    if($type === 'image' && isset($definition['_multi'])) {
-      $acf_type = 'gallery';
-    }
-
-    $acf = [
-        "key" => "{$parent_key}_{$key}",
-        "label" => $label,
-        "name" => $key,
-        "type" => $acf_type,
-        "required" =>
-            !empty($definition["_required"]) && $definition["_required"]
-                ? 1
-                : 0,
+    $field = [
+        'type' => $type,
+        'label' => html_entity_decode($definition['_label'] ?? str_replace('_', ' ', ucfirst($key))),
     ];
 
-    if (isset($definition["_help"])) {
-        $acf["instructions"] = $definition["_help"];
+    if (isset($definition['_help'])) {
+        $field['help'] = html_entity_decode($definition['_help']);
     }
 
-    if (in_array($type, ["image", "file"])) {
-        $acf["return_format"] = "id";
+    if ($type === 'group') {
+        $field['fields'] = carlo_fields(carlo_structure_fields($definition));
     }
 
-    if ($type === "date") {
-        $acf["return_format"] = "Y-m-d";
+    if ($type === 'repeater') {
+        $field['fields'] = carlo_fields($definition['_repeat']);
+        $field['min'] = $definition['_min'] ?? $definition['_times'] ?? 0;
+        $field['max'] = $definition['_max'] ?? $definition['_times'] ?? null;
+        $field['add_button'] = $definition['_add_button'] ?? 'Ajouter un élément';
     }
 
-    if (isset($definition["_help"])) {
-        $acf["instructions"] = $definition["_help"];
+    if ($type === 'choices') {
+        $field['choices'] = $definition['_choices'];
+        $field['multi'] = !empty($definition['_multi']);
     }
 
-    if ($type === "group") {
-        $definition = carlo_structure_fields($definition);
-        $acf["sub_fields"] = array_map(
-            "carlo_acf_fields",
-            array_keys($definition),
-            $definition,
-            array_fill(0, count($definition), "{$parent_key}_{$key}")
-        );
-        $acf["layout"] = "block";
+    if ($type === 'reference') {
+        $field['post_types'] = (array) $definition['_ref_type'];
+        $field['max'] = $definition['_max'] ?? null;
     }
 
-    if ($type === "container") {
-
-        $acf["display"] = "block";
-        $acf["layouts"] = array_map(function ($block) use ($parent_key, $key) {
-            if(is_null($block)) {
-                //dump($parent_key, $key, $block);
-                return;
-            }
-
-            return carlo_acf_fields(
-                $block['_id'],
-                $block,
-                "{$parent_key}_{$key}"
-            );
-        }, $definition['_items'] ?? $definition);
-
-        $acf["button_label"] =
-            $definition["_add_button"] ?? "Ajouter une sous-section";
-        $acf["min"] = $definition["_min"] ?? null;
-        $acf["max"] = $definition["_max"] ?? null;
-
+    if ($type === 'container') {
+        $field['items'] = array_values(array_map(fn($item) => carlo_block_name($item['_id']), carlo_container_items($definition)));
     }
 
-    if ($type === "repeater") {
-        $acf["sub_fields"] = array_map(
-            "carlo_acf_fields",
-            array_keys($definition["_repeat"]),
-            $definition["_repeat"],
-            array_fill(0, count($definition["_repeat"]), "{$parent_key}_{$key}")
-        );
-        $acf["layout"] = "block";
+    return $field;
+}
 
-        foreach ($acf["sub_fields"] as $k => $v) {
-            $acf["sub_fields"][$k]["parent_repeater"] = "{$parent_key}_{$key}";
-        }
-
-        $acf["button_label"] =
-            $definition["_add_button"] ?? "Ajouter un élément";
-        $acf["min"] = $definition["_min"] ?? null;
-        $acf["max"] = $definition["_max"] ?? null;
-        if (
-            !isset($acf["min"]) &&
-            !isset($acf["max"]) &&
-            isset($definition["_times"])
-        ) {
-            $acf["min"] = $acf["max"] = $definition["_times"];
-        }
+function carlo_fields($definitions)
+{
+    $fields = [];
+    foreach ($definitions as $key => $definition) {
+        $fields[$key] = carlo_field($key, $definition);
     }
-
-    if ($type === "select" || $type === "choices") {
-        $acf["choices"] = $definition["_choices"];
-        $acf["value"] = $definition['_value']?? false;
-        if (!empty($definition["_multi"])) {
-            $acf["type"] = "checkbox";
-        }
-    }
-
-    if ($type === "form") {
-        /** @var NF_Database_Models_Form[] */
-        $forms = WPCF7_ContactForm::find();
-        foreach ($forms as $form) {
-            $acf["choices"][$form->id()] = $form->title();
-        }
-    }
-
-    if ($type === "reference") {
-
-        $acf["post_type"] = (array) $definition["_ref_type"];
-        $acf["return_format"] = "object";
-        if (isset($definition["_ref_max"])) {
-            throw new Exception(
-                "Les référence doivent utiliser la clé _max et non _ref_max"
-            );
-        }
-        if (isset($definition["_max"])) {
-            $acf["max"] = $definition["_max"];
-        }
-    }
-
-    if ($type === "taxonomy") {
-        $acf["taxonomy"] = $definition["_taxo"];
-        $acf["return_format"] = "object";
-        $acf["field_type"] = "multi_select";
-    }
-
-    if ($type === "text") {
-        $acf["new_lines"] = "br";
-    }
-
-    if ($type === "link") {
-        $acf["return_format"] = $definition["_return_url"] ? "url" : "array";
-    }
-
-    if ($type === "wysiwyg") {
-        $acf["media_upload"] = 0;
-    }
-
-    return $acf;
+    return $fields;
 }
 
 /**
- * Nom du bloc d'une section : sections/text:base → acf/carlo-sections-text.
- * Le préfixe acf/ est imposé par ACF.
+ * Sections que peut contenir un champ conteneur (liste de définitions ayant un _id).
+ */
+function carlo_container_items($definition)
+{
+    if (!is_array($definition) || isset($definition['_id']) || ($definition['_type'] ?? 'container') !== 'container') {
+        return [];
+    }
+    return array_filter($definition['_items'] ?? $definition, fn($item) => is_array($item) && isset($item['_id']));
+}
+
+/**
+ * Schéma des attributs du bloc : un attribut par champ de premier niveau. Le conteneur n'en est
+ * pas un : ses sections sont les blocs enfants.
+ */
+function carlo_block_attributes($fields)
+{
+    $fields = array_filter($fields, fn($field) => $field['type'] !== 'container');
+    return array_map(fn($field) => ['type' => match ($field['type']) {
+        'text_short', 'text', 'wysiwyg', 'url', 'color', 'date', 'datetime', 'embed' => 'string',
+        'boolean' => 'boolean',
+        'number' => 'number',
+        'image', 'file' => 'integer',
+        'group' => 'object',
+        'repeater', 'gallery', 'reference' => 'array',
+        'choices' => $field['multi'] ? 'array' : 'string',
+        // Types pas encore pris en charge par l'éditeur : valeur libre.
+        default => ['string', 'number', 'boolean', 'array', 'object', 'null'],
+    }], $fields);
+}
+
+/**
+ * Données passées au template : chaque champ est présent (la library ne tolère pas les données
+ * absentes) et mis en forme comme le faisait ACF.
+ *
+ * Avec $path (aperçu de l'éditeur), les textes sont remplacés par un marqueur {{carlo:chemin}}
+ * que l'éditeur rend saisissable, et le conteneur par l'emplacement des blocs enfants : le rendu
+ * ne dépend pas des textes, il n'est pas recalculé pendant la frappe.
+ */
+function carlo_field_values($fields, $values, $path = null)
+{
+    $data = [];
+    foreach ($fields as $key => $field) {
+        $value = $values[$key] ?? null;
+        $marker = $path === null ? null : "{$path}{$key}";
+
+        if ($marker !== null && in_array($field['type'], CARLO_INLINE_TYPES, true)) {
+            $data[$key] = "{{carlo:{$marker}}}";
+            continue;
+        }
+
+        $data[$key] = match ($field['type']) {
+            'group' => carlo_field_values($field['fields'], (array) $value, $marker === null ? null : "{$marker}."),
+            'repeater' => array_map(
+                fn($i) => carlo_field_values($field['fields'], (array) ($value[$i] ?? []), $marker === null ? null : "{$marker}.{$i}."),
+                // Aperçu : les éléments obligatoires (_min, _times) sont affichés, pour être remplis.
+                $marker === null || count((array) $value) >= $field['min'] ? array_keys((array) $value) : range(0, $field['min'] - 1)
+            ),
+            'container' => $marker === null ? (array) $value : [['_id' => 'carlo:inner']],
+            'reference' => array_values(array_filter(
+                array_map('get_post', (array) $value),
+                fn($post) => $post && $post->post_status === 'publish'
+            )),
+            'gallery' => (array) $value,
+            'boolean' => (bool) $value,
+            'text' => nl2br($value ?? ''),
+            'wysiwyg' => wpautop($value ?? ''),
+            default => $value ?? '',
+        };
+    }
+    return $data;
+}
+
+/**
+ * Données d'une section à partir de son bloc : attributs, et blocs enfants pour le conteneur.
+ */
+function carlo_section_data($id, $attributes, $inner_blocks = [], $preview = false)
+{
+    $fields = carlo_fields(carlo_structure_fields(carlo_sections()[$id]));
+    foreach ($fields as $key => $field) {
+        if ($field['type'] === 'container' && !$preview) {
+            $attributes[$key] = [];
+            foreach ($inner_blocks as $inner) {
+                $inner_id = carlo_section_id($inner->name);
+                $attributes[$key][] = ['_id' => $inner_id] + carlo_section_data($inner_id, $inner->attributes, $inner->inner_blocks);
+            }
+        }
+    }
+    return carlo_field_values($fields, $attributes, $preview ? '' : null);
+}
+
+/**
+ * Nom du bloc d'une section : sections/text:base → carlo/sections-text.
  */
 function carlo_block_name($id)
 {
-    return 'acf/' . carlo_block_slug($id);
+    return 'carlo/' . carlo_block_slug($id);
 }
 
 function carlo_block_slug($id)
 {
-    return 'carlo-' . trim(preg_replace('/[^a-z0-9]+/', '-', strtolower(preg_replace('/:base$/', '', $id))), '-');
+    return trim(preg_replace('/[^a-z0-9]+/', '-', strtolower(preg_replace('/:base$/', '', $id))), '-');
 }
 
 /**
- * Enregistre un bloc ACF par section proposée dans une région.
+ * _id de la section d'un bloc : carlo/sections-text → sections/text:base.
  */
-function carlo_register_section_blocks()
+function carlo_section_id($block_name)
 {
+    static $ids;
+    $ids ??= array_combine(array_map('carlo_block_name', array_keys(carlo_sections())), array_keys(carlo_sections()));
+    return $ids[$block_name] ?? null;
+}
+
+/**
+ * Sections proposées par une région ou par le conteneur d'une autre section, indexées par _id.
+ */
+function carlo_sections()
+{
+    static $sections;
+    if (isset($sections)) {
+        return $sections;
+    }
+
     $sections = [];
+    $add = function ($section) use (&$add, &$sections) {
+        if (isset($sections[$section['_id']])) {
+            return;
+        }
+        $sections[$section['_id']] = $section;
+        foreach (carlo_structure_fields($section) as $definition) {
+            array_map($add, carlo_container_items($definition));
+        }
+    };
     foreach (['page', ...array_keys(carlo_structure('types') ?? [])] as $post_type) {
         foreach (carlo_templates($post_type) as $template) {
             foreach (carlo_structure_fields($template) as $region) {
-                $sections += carlo_region($region)['sections'];
+                array_map($add, carlo_region($region)['sections']);
             }
         }
     }
-    foreach ($sections as $id => $definition) {
-        carlo_register_section_block($id, $definition);
+    return $sections;
+}
+
+function carlo_section_title($id, $definition)
+{
+    [, $name, $variant] = carlo_explode_id($id);
+    return $definition['_label'] ?? ucfirst(str_replace('_', ' ', $variant === 'base' ? $name : "{$name} {$variant}"));
+}
+
+/**
+ * Aperçu d'une section dans l'éditeur (cf. assets/sections.js), et non rendu du site.
+ */
+function carlo_is_editor_preview()
+{
+    return wp_is_serving_rest_request() && str_contains($_SERVER['REQUEST_URI'] ?? '', 'block-renderer');
+}
+
+/**
+ * Un bloc dynamique par section : ses attributs sont les champs de la section, son rendu est
+ * le template Carlo de la section.
+ */
+function carlo_register_section_blocks()
+{
+    carlo_editor_asset('carlo-sections', 'sections.js', [
+        'wp-blocks', 'wp-block-editor', 'wp-components', 'wp-compose', 'wp-element', 'wp-data', 'wp-core-data',
+        'wp-api-fetch', 'wp-url', 'wp-escape-html', 'wp-html-entities',
+    ]);
+    carlo_editor_asset('carlo-sections', 'sections.css');
+
+    foreach (carlo_sections() as $id => $definition) {
+        $fields = carlo_fields(carlo_structure_fields($definition));
+
+        register_block_type(carlo_block_name($id), [
+            'api_version' => 3,
+            'title' => carlo_section_title($id, $definition),
+            'category' => 'design',
+            // ancestor et non parent : parent l'emporterait sur les allowedBlocks de la région.
+            // Une section imbriquée a elle aussi une région pour ancêtre.
+            'ancestor' => ['carlo/region'],
+            'attributes' => carlo_block_attributes($fields),
+            // Les templates Carlo n'appliquent pas de classe CSS saisie dans l'éditeur.
+            'supports' => ['html' => false, 'className' => false, 'customClassName' => false],
+            'editor_script_handles' => ['carlo-sections'],
+            'render_callback' => function ($attributes, $content, $block) use ($id, $fields) {
+                $preview = carlo_is_editor_preview();
+                $filled = count($block->inner_blocks) > 0;
+                array_walk_recursive($attributes, function ($value) use (&$filled) {
+                    $filled = $filled || !empty($value);
+                });
+                // Section pas encore remplie : rien sur le site.
+                if ($fields && !$filled && !$preview) {
+                    return '';
+                }
+                ob_start();
+                carlo_render($id, carlo_section_data($id, $attributes, $block->inner_blocks, $preview));
+                return ob_get_clean();
+            },
+        ]);
     }
 }
 
-function carlo_register_section_block($id, $definition)
-{
-    [, $name, $variant] = carlo_explode_id($id);
-    $slug = carlo_block_slug($id);
-    $title = $definition['_label'] ?? ucfirst(str_replace('_', ' ', $variant === 'base' ? $name : "{$name} {$variant}"));
-    $fields = carlo_structure_fields($definition);
+add_action('enqueue_block_editor_assets', function () {
+    $sections = [];
+    foreach (carlo_sections() as $id => $definition) {
+        $sections[carlo_block_name($id)] = [
+            'title' => carlo_section_title($id, $definition),
+            'fields' => (object) carlo_fields(carlo_structure_fields($definition)),
+        ];
+    }
+    wp_add_inline_script('carlo-sections', 'window.carloSections = ' . wp_json_encode((object) $sections) . ';', 'before');
+    // Le formulaire est dans le panneau Réglages, hors de l'iframe du contenu.
+    wp_enqueue_style('carlo-sections');
+    // Réglages TinyMCE du site (dont les filtres tiny_mce_before_init) pour les champs wysiwyg.
+    wp_enqueue_editor();
+});
 
-    acf_register_block_type([
-        'name' => $slug,
-        'title' => $title,
-        'category' => 'design',
-        // ancestor et non parent : parent l'emporterait sur les allowedBlocks de la région.
-        'ancestor' => ['carlo/region'],
-        'supports' => ['align' => false],
-        'render_callback' => function ($block, $content, $is_preview) use ($id, $title, $fields) {
-            $data = get_fields() ?: [];
-            $filled = false;
-            array_walk_recursive($data, function ($value) use (&$filled) {
-                $filled = $filled || !empty($value);
-            });
-            // Section pas encore remplie : la library ne tolère pas les données absentes.
-            if ($fields && !$filled) {
-                if ($is_preview) {
-                    echo '<p class="carlo-placeholder">' . esc_html("{$title} : à remplir dans le panneau Réglages.") . '</p>';
-                }
-                return;
-            }
-            carlo_render($id, $data);
-        },
-    ]);
-
-    acf_add_local_field_group([
-        'key' => "group_{$slug}",
-        'title' => $title,
-        'fields' => array_map(
-            'carlo_acf_fields',
-            array_keys($fields),
-            $fields,
-            array_fill(0, count($fields), "field_{$slug}")
-        ),
-        'location' => [[['param' => 'block', 'operator' => '==', 'value' => "acf/{$slug}"]]],
-    ]);
-}
+// Repère des contenus Carlo dans l'éditeur, pour élargir le panneau Réglages (cf. sections.css).
+add_filter('admin_body_class', function ($classes) {
+    $screen = get_current_screen();
+    return $screen && $screen->is_block_editor() && carlo_post_template(get_post()) ? "{$classes} carlo-editor" : $classes;
+});
